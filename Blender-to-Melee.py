@@ -22,7 +22,29 @@ class Melee_Dev_Cam_ControlPanel(bpy.types.Panel):
         layout.row().operator("wm.start_consistent_matrix_sender_operator")
         layout.row().label(text="Press Q to quit going live.")
 
-def blender_to_dolphin():
+def process_ops(pid, addr, buf, bytesWritten):
+    k32 = WinDLL('kernel32', use_last_error=True)
+    PROCESS_ALL_ACCESS = 0x1F0FFF
+    
+    OpenProcess = k32.OpenProcess
+    OpenProcess.argtypes = [DWORD,BOOL,DWORD]
+    OpenProcess.restype = HANDLE
+
+    processHandle = OpenProcess(PROCESS_ALL_ACCESS, False, pid)
+
+    CloseHandle = k32.CloseHandle
+    CloseHandle.argtypes = [HANDLE]
+    CloseHandle.restype = BOOL
+
+    WriteProcessMemory = k32.WriteProcessMemory
+    WriteProcessMemory.argtypes = [HANDLE,LPCVOID,LPVOID,c_size_t,POINTER(c_size_t)]
+    WriteProcessMemory.restype = BOOL
+    WriteProcessMemory(processHandle, addr, c_char_p(buf), len(buf), byref(bytesWritten))
+    
+    CloseHandle(processHandle)
+
+
+def sync_blender_cam():
     # Define Camera and Origin
     cam = bpy.data.objects['Camera']
     org = bpy.data.objects['Origin']
@@ -35,42 +57,27 @@ def blender_to_dolphin():
 
     # fov in mm, unsure of the true unit of measurement in melee.
     fov = cam.data.lens
-    
     # List object vector data
     loc_data = [org_loc, cam_loc]
-    
     # Pack list into big endian bytes. (">f")
     mat_bytes = b''
-    
     for r in loc_data:
         for c in r:
             mat_bytes += struct.pack(">f", c)
-    
+
     # Add fov data to struct.pack
     mat_bytes += struct.pack(">f", fov)
     
-    OpenProcess = windll.kernel32.OpenProcess
-    WriteProcessMemory = windll.kernel32.WriteProcessMemory
-    CloseHandle = windll.kernel32.CloseHandle
-
-    WriteProcessMemory.argtypes = [HANDLE,LPCVOID,LPVOID,c_size_t,POINTER(c_size_t)]
-
-    PROCESS_ALL_ACCESS = 0x1F0FFF
-
     # The location in memory where Melee's developer camera begins.
     DevCamAddress = bpy.context.scene.cam_mem_address
+    # pid is the first 8 characters of UI
     pid = int(DevCamAddress[:8], 16)
-    address = int(DevCamAddress[8:], 16)
-
-    bufferSize = len(mat_bytes)
-    buffer = c_char_p(mat_bytes)
+    # addr is the last 16 characters of UI
+    addr = int(DevCamAddress[8:], 16)
+    buf = mat_bytes
     bytesWritten = c_ulonglong()
+    process_ops(pid, addr, buf, bytesWritten)
 
-    processHandle = OpenProcess(PROCESS_ALL_ACCESS, False, pid)
-    WriteProcessMemory(processHandle, address, buffer, bufferSize, byref(bytesWritten))
-
-    CloseHandle(processHandle)
-    
 '''def sync_player_control():
     anim = 1
     anim_byte = b''
@@ -81,8 +88,6 @@ def blender_to_dolphin():
     CloseHandle = windll.kernel32.CloseHandle
 
     WriteProcessMemory.argtypes = [HANDLE,LPCVOID,LPVOID,c_size_t,POINTER(c_size_t)]
-
-    PROCESS_ALL_ACCESS = 0x1F0FFF
 
     DevCamAddress = bpy.context.scene.cam_mem_address
     pid = int(DevCamAddress[:8], 16)
@@ -121,7 +126,7 @@ class ConsistentMatrixSender(bpy.types.Operator):
             return {'CANCELLED'}
 
         if event.type == 'TIMER':
-            blender_to_dolphin()
+            sync_blender_cam()
         return {'PASS_THROUGH'}
 
     def execute(self, context):
