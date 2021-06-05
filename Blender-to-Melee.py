@@ -71,7 +71,7 @@ def blender_to_dolphin():
 
     CloseHandle(processHandle)
     
-def sync_player_control():
+'''def sync_player_control():
     anim = 1
     anim_byte = b''
     anim_byte += struct.pack("b", anim)
@@ -103,7 +103,7 @@ def check_anim_state():
     else:
         anim = 0
     return anim
-
+'''
 class ConsistentMatrixSender(bpy.types.Operator):
     """Fires up the interval to consistently write to memory"""
     bl_idname = "wm.start_consistent_matrix_sender_operator"
@@ -121,8 +121,7 @@ class ConsistentMatrixSender(bpy.types.Operator):
             return {'CANCELLED'}
 
         if event.type == 'TIMER':
-            #blender_to_dolphin()
-            sync_player_control()
+            blender_to_dolphin()
         return {'PASS_THROUGH'}
 
     def execute(self, context):
@@ -149,8 +148,4 @@ def unregister():
     bpy.utils.unregister_class(ConsistentMatrixSender)
 
 if __name__ == "__main__":
-    one = blender_to_dolphin()
-    two = sync_player_control()
-    print(one)
-    print(two)
     register()
