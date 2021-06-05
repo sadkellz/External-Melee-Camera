@@ -43,7 +43,6 @@ def process_ops(pid, addr, buf, bytesWritten):
     
     CloseHandle(processHandle)
 
-
 def sync_blender_cam():
     # Define Camera and Origin
     cam = bpy.data.objects['Camera']
@@ -78,37 +77,23 @@ def sync_blender_cam():
     bytesWritten = c_ulonglong()
     process_ops(pid, addr, buf, bytesWritten)
 
-'''def sync_player_control():
-    anim = 1
-    anim_byte = b''
-    anim_byte += struct.pack("b", anim)
+def sync_player_control():
+        # Check if animation is playing.
+    if bpy.context.screen.is_animation_playing:
+        anim_byte = 1
+    else:
+        anim_byte = 0
 
-    OpenProcess = windll.kernel32.OpenProcess
-    WriteProcessMemory = windll.kernel32.WriteProcessMemory
-    CloseHandle = windll.kernel32.CloseHandle
-
-    WriteProcessMemory.argtypes = [HANDLE,LPCVOID,LPVOID,c_size_t,POINTER(c_size_t)]
+    
 
     DevCamAddress = bpy.context.scene.cam_mem_address
     pid = int(DevCamAddress[:8], 16)
-    address = int("0000000080479D68", 16)
-    bufferSize = len(anim_byte)
-    buffer = c_char_p(anim_byte)
+    addr = 0x0000000080469D68
+    buf = struct.pack(">b", anim_byte)
     bytesWritten = c_ulonglong()
+    process_ops(pid, addr, buf, bytesWritten)   
 
-    processHandle = OpenProcess(PROCESS_ALL_ACCESS, False, pid)
-    WriteProcessMemory(processHandle, address, buffer, bufferSize, byref(bytesWritten))
 
-    CloseHandle(processHandle)
-
-def check_anim_state():
-    # Check if animation is playing.
-    if bpy.context.screen.is_animation_playing:
-        anim = 1
-    else:
-        anim = 0
-    return anim
-'''
 class ConsistentMatrixSender(bpy.types.Operator):
     """Fires up the interval to consistently write to memory"""
     bl_idname = "wm.start_consistent_matrix_sender_operator"
@@ -127,6 +112,7 @@ class ConsistentMatrixSender(bpy.types.Operator):
 
         if event.type == 'TIMER':
             sync_blender_cam()
+            sync_player_control()
         return {'PASS_THROUGH'}
 
     def execute(self, context):
