@@ -2,25 +2,37 @@ import bpy
 import struct
 from ctypes import *
 from ctypes.wintypes import *
+from bpy import context
 from mathutils import Vector
+from bpy.props import BoolProperty
+
+bpy.types.WindowManager.my_operator_toggle = bpy.props.BoolProperty()
 
 class Melee_Dev_Cam_ControlPanel(bpy.types.Panel):
     bl_label = "Blender Camera to Melee"
     bl_idname = "OBJECT_PT_dolphinfreelook"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
-
     def draw(self, context):
+        wm = context.window_manager
+        label = "Sync Media Controls" if wm.my_operator_toggle else "Sync Media Controls"
         layout = self.layout
-    
         layout.row().label(text="Camera in Memory:")
             # Always 0000XXXX 0000000080443040 where X = PID, seems like you could be able to change this.
         layout.row().prop(context.scene, "cam_mem_address")
-        layout.row().prop(context.scene, "player_toggle")
-        layout.row().operator("wm.sync_player_operator")
+        layout.prop(wm, 'my_operator_toggle', text=label, toggle=True)
         layout.separator(factor=2)
         layout.row().operator("wm.start_consistent_matrix_sender_operator")
         layout.row().label(text="Press Q to quit going live.")
+
+def update_function(self, context):
+    if self.my_operator_toggle:
+        bpy.ops.sync.mc('INVOKE_DEFAULT')
+    return
+
+bpy.types.WindowManager.my_operator_toggle = bpy.props.BoolProperty(
+                                                 default = False,
+                                                 update = update_function)
 
 def process_ops(pid, addr, buf, bufSize, bytesWritten):
     k32 = WinDLL('kernel32', use_last_error=True)
@@ -89,8 +101,9 @@ def sync_player_control():
     pid = int(DevCamAddress[:8], 16)
     addr = 0x0000000080469D68
     buf = struct.pack(">b", anim_byte)
+    bufSize = buf
     bytesWritten = c_ulonglong()
-    process_ops(pid, addr, buf, bytesWritten)   
+    process_ops(pid, addr, buf, bufSize, bytesWritten)   
 
 class ConsistentMatrixSender(bpy.types.Operator):
     """Fires up the interval to consistently write to memory"""
@@ -122,29 +135,22 @@ class ConsistentMatrixSender(bpy.types.Operator):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
-class Sync_Toggle_Options(bpy.types.Operator):
-    """test"""
-    bl_idname = "wm.sync_player_operator"
-    bl_label = "Sync Media Controls?"
-
-    _timer = None
-
-    @classmethod
-    def poll(cls, context):
-        return bool(context.scene.player_toggle) == True
+class Sync_Media_Controls(bpy.types.Operator):
+    bl_idname = "sync.mc"
+    bl_label = "Sync Media Controls"
 
     def modal(self, context, event):
-        if event.type in {'Q'}:
-            self.cancel(context)
-            return {'CANCELLED'}
+        if not context.window_manager.my_operator_toggle:
+            context.window_manager.event_timer_remove(self._timer)
+            return {'FINISHED'}
 
         if event.type == 'TIMER':
             sync_player_control()
         return {'PASS_THROUGH'}
 
-    def execute(self, context):
+    def invoke(self, context, event):
         wm = context.window_manager
-        self._timer = wm.event_timer_add(0.1, window=context.window)
+        self._timer = wm.event_timer_add(1.0, window=context.window)
         wm.modal_handler_add(self)
         return {'RUNNING_MODAL'}
 
@@ -154,13 +160,13 @@ class Sync_Toggle_Options(bpy.types.Operator):
 
 def register():
     bpy.utils.register_class(ConsistentMatrixSender)
-    bpy.utils.register_class(Sync_Toggle_Options)
+    bpy.utils.register_class(Sync_Media_Controls)
     bpy.utils.register_class(Melee_Dev_Cam_ControlPanel)
     bpy.types.Scene.cam_mem_address = bpy.props.StringProperty(name="")
 
 def unregister():
     bpy.utils.unregister_class(ConsistentMatrixSender)
-    bpy.utils.register_class(Sync_Toggle_Options)
+    bpy.utils.register_class(Sync_Media_Controls)
 
 if __name__ == "__main__":
     register()
