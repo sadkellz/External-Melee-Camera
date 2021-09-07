@@ -2,10 +2,11 @@ import bpy
 import struct
 from ctypes import *
 from ctypes.wintypes import *
-from bpy import context
-from mathutils import Vector
+#from bpy import context
+#from mathutils import Vector
 from bpy.props import BoolProperty
 
+        # Toggle Function...
 bpy.types.WindowManager.my_operator_toggle = bpy.props.BoolProperty()
 
 class Melee_Dev_Cam_ControlPanel(bpy.types.Panel):
@@ -19,25 +20,29 @@ class Melee_Dev_Cam_ControlPanel(bpy.types.Panel):
         layout = self.layout
         layout.row().label(text="Camera in Memory:")
             # Always 0000XXXX 0000000080443040 where X = PID, seems like you could be able to change this.
+            # A more elegant solution is a must
         layout.row().prop(context.scene, "cam_mem_address")
         layout.prop(wm, 'my_operator_toggle', text=label, toggle=True)
         layout.separator(factor=2)
         layout.row().operator("wm.start_consistent_matrix_sender_operator")
         layout.row().label(text="Press Q to quit going live.")
 
+        # Toggle Function...
 def update_function(self, context):
     if self.my_operator_toggle:
         bpy.ops.sync.mc('INVOKE_DEFAULT')
     return
 
+        # Toggle Function...
 bpy.types.WindowManager.my_operator_toggle = bpy.props.BoolProperty(
                                                  default = False,
                                                  update = update_function)
 
+        # ctypes k32 memory bullshit put into a function, so you can write to multiple addresses. https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
 def process_ops(pid, addr, buf, bufSize, bytesWritten):
     k32 = WinDLL('kernel32', use_last_error=True)
     PROCESS_ALL_ACCESS = 0x1F0FFF
-    
+
     OpenProcess = k32.OpenProcess
     OpenProcess.argtypes = [DWORD,BOOL,DWORD]
     OpenProcess.restype = HANDLE
@@ -51,6 +56,7 @@ def process_ops(pid, addr, buf, bufSize, bytesWritten):
     WriteProcessMemory = k32.WriteProcessMemory
     WriteProcessMemory.argtypes = [HANDLE,LPCVOID,LPVOID,c_size_t,POINTER(c_size_t)]
     WriteProcessMemory.restype = BOOL
+
     WriteProcessMemory(processHandle, addr, c_char_p(buf), len(bufSize), byref(bytesWritten))
     
     CloseHandle(processHandle)
@@ -60,9 +66,11 @@ def sync_blender_cam():
     org = bpy.data.objects['Origin']
     cam = bpy.data.objects['Camera']
 
-        # Change Axis Orientation
-    org_loc = org.location.yzx
-    cam_loc = cam.location.yzx
+        # Vector translation of object world matrix, change axis of orientation.
+    org_loc = org.matrix_world.translation.yzx
+    cam_loc = cam.matrix_world.translation.yzx
+    
+        # Negate y and x to align with melee's look at -x.
     org_loc[0] = org_loc[0] * -1
     org_loc[2] = org_loc[2] * -1
     cam_loc[0] = cam_loc[0] * -1
@@ -78,7 +86,7 @@ def sync_blender_cam():
         for c in r:
             mat_bytes += struct.pack(">f", c)
 
-        # Add fov data to struct.pack
+        # Add fov data to to end of camera data.
     mat_bytes += struct.pack(">f", fov)
     
         # The location in memory where Melee's developer camera begins.
@@ -99,14 +107,17 @@ def sync_player_control():
     else:
         anim_byte = 1
 
+        # Definitions for process_ops
     DevCamAddress = bpy.context.scene.cam_mem_address
     pid = int(DevCamAddress[:8], 16)
+        # Address of where data will be written
     addr = 0x0000000080469D68
     buf = struct.pack(">b", anim_byte)
     bufSize = buf
     bytesWritten = c_ulonglong()
     process_ops(pid, addr, buf, bufSize, bytesWritten)   
 
+        # Timer which defines how often data will be written to Dolphin.
 class ConsistentMatrixSender(bpy.types.Operator):
     """Fires up the interval to consistently write to memory"""
     bl_idname = "wm.start_consistent_matrix_sender_operator"
@@ -129,6 +140,7 @@ class ConsistentMatrixSender(bpy.types.Operator):
 
     def execute(self, context):
         wm = context.window_manager
+        # 0.05 seems to be a good in-between for fps/performance.
         self._timer = wm.event_timer_add(0.05, window=context.window)
         wm.modal_handler_add(self)
         return {'RUNNING_MODAL'}
@@ -137,6 +149,7 @@ class ConsistentMatrixSender(bpy.types.Operator):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
+        # Sync Blender media controls. Sync is done by connecting frame advance on/off from melee, to the function that checks if an animation is playing (Blender).
 class Sync_Media_Controls(bpy.types.Operator):
     bl_idname = "sync.mc"
     bl_label = "Sync Media Controls"
@@ -152,6 +165,7 @@ class Sync_Media_Controls(bpy.types.Operator):
 
     def invoke(self, context, event):
         wm = context.window_manager
+        # This timer does not need to be fast.
         self._timer = wm.event_timer_add(1.0, window=context.window)
         wm.modal_handler_add(self)
         return {'RUNNING_MODAL'}
