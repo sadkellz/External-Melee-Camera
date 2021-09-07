@@ -61,16 +61,18 @@ def sync_blender_cam():
     cam = bpy.data.objects['Camera']
 
         # Change Axis Orientation
-    org_loc = org.location.xzy
-    cam_loc = cam.location.xzy
+    org_loc = org.location.yzx
+    cam_loc = cam.location.yzx
     org_loc[0] = org_loc[0] * -1
+    org_loc[2] = org_loc[2] * -1
     cam_loc[0] = cam_loc[0] * -1
+    cam_loc[2] = cam_loc[2] * -1
 
         # fov in mm, unsure of the true unit of measurement in melee.
     fov = cam.data.lens
         # List object vector data
     loc_data = [org_loc, cam_loc]
-    # Pack list into big endian bytes. (">f")
+        # Pack list into big endian bytes. (">f")
     mat_bytes = b''
     for r in loc_data:
         for c in r:
