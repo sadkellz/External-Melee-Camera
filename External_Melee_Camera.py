@@ -181,38 +181,31 @@ class Sync_Media_Controls(bpy.types.Operator):
         wm.event_timer_remove(self._timer)
 
 class Screenshot_Sequence(bpy.types.Operator):
-    """test"""
+    """Creates an Image Sequence of the Frame Range."""
     bl_idname = "wm.ss_seq"
     bl_label = "Image Sequence"
     _timer = None
-    ss_frame = -1
-    #_win = util_dol()
-    wait = 2
+
+    @staticmethod
+    def frame_stepper():
+        _win = util_dol()
+
+        _win.set_focus()
+        keyboard.send_keys("{VK_F4 down}"
+                           "{VK_F4 up}")
+        bpy.ops.screen.frame_offset(delta=1)
+        time.sleep(2)
 
     def modal(self, context, event):
         scene = context.scene
-        seq_active = self.ss_frame == scene.frame_current
 
         if event.type in {'ESC'} or scene.frame_current > scene.frame_end:
             self.cancel(context)
             return {'CANCELLED'}
 
-        if event.type == 'TIMER' and self.wait:
-            self.wait -= 1
-            return {'PASS_THROUGH'}
-
-        if seq_active:
-            return {'PASS_THROUGH'}
-            
-        else:
-            self.ss_frame = scene.frame_current
-            #self._win.set_focus()
-            print("taking screenshot")
-            #keyboard.send_keys("{VK_F4 down}"
-            #                    "{VK_F4 up}")
-            print("advance frame")
-            bpy.ops.screen.frame_offset(delta=1)
-            self.wait = 1
+        if event.type == 'TIMER':
+            self.frame_stepper()
+            bpy.context.view_layer.update()
         return {'PASS_THROUGH'}
 
     def execute(self, context):
@@ -221,7 +214,6 @@ class Screenshot_Sequence(bpy.types.Operator):
         self._timer = wm.event_timer_add(1, window=context.window)
         wm.modal_handler_add(self)
         scene.frame_set(scene.frame_start)
-        print("ahhhh")
         return {'RUNNING_MODAL'}
 
     def cancel(self, context):
@@ -241,8 +233,6 @@ class Multi_Op(bpy.types.Operator):
     def execute(self, context):
         if self.action == 'LOAD':
             self.sync_frame_end()
-        '''elif self.action == 'SEQUENCE':
-            self.screen_seq()'''
         return {'FINISHED'}
 
     @staticmethod
@@ -254,20 +244,6 @@ class Multi_Op(bpy.types.Operator):
         _win.set_focus()
         keyboard.send_keys("{VK_F3 down}"
                             "{VK_F3 up}")
-    
-    '''@staticmethod
-    def screen_seq():
-        _win = util_dol()
-        frames = bpy.context.scene.frame_end
-        bpy.ops.screen.frame_jump(end=False)
-        
-    def screen
-        while range(frames):
-            _win.set_focus()
-            keyboard.send_keys("{VK_F4 down}"
-                                "{VK_F4 up}")
-            time.sleep(1)
-            bpy.ops.screen.frame_offset(delta=1)'''
 
 # ------------------------------------------------------------------------
 #    Panel in Object Mode
@@ -296,9 +272,8 @@ class EMC_Control_Panel(Panel):
         #layout.prop(EMCTool, "pid_entry")
         layout.operator("wm.sync_cam")
         layout.prop(wm, 'sync_m_toggle', text=label_sync, toggle=True)
-        #layout.operator('multi.op', text='Load Save State').action = 'LOAD'
+        layout.operator('multi.op', text='Load Save State').action = 'LOAD'
         layout.operator("wm.ss_seq")
-        #layout.operator('multi.op', text='Screenshot Sequence').action = 'SEQUENCE'
         layout.separator()
 
     def update_function(self, context):
