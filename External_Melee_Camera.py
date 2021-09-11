@@ -20,21 +20,6 @@ from bpy.types import (Panel,
 from pywinauto import Application, keyboard
 
 # ------------------------------------------------------------------------
-#    Scene Properties
-# ------------------------------------------------------------------------
-
-class MyProperties(PropertyGroup):
-
-    pid_entry: StringProperty(
-        name="PID",
-        description=":",
-        default="",
-        maxlen=32,
-        )
-
-    bpy.types.WindowManager.sync_m_toggle = BoolProperty()
-
-# ------------------------------------------------------------------------
 #    Functions
 # ------------------------------------------------------------------------ 
 
@@ -63,7 +48,7 @@ def process_ops(pid, addr, buf, bufSize, bytesWritten):
     CloseHandle(processHandle)
 
 def dol_pid():
-    # psutil to automatically grab Dolphins PID.
+        # psutil to automatically grab Dolphins PID.
     process_name = "Slippi Dolphin"
     pid = None
 
@@ -76,11 +61,10 @@ def util_dol():
     pid = dol_pid()
     app = Application().connect(process=pid)
     win = app['Faster Melee - Slippi(2.3.6) - Playback']
-    # Changes focus and sends key.
+        # Changes focus and sends key.
     return win
 
 def sync_blender_cam(pid):
-
         # Define Camera and Origin
     org = bpy.data.objects['Origin']
     cam = bpy.data.objects['Camera']
@@ -110,7 +94,6 @@ def sync_blender_cam(pid):
     process_ops(pid, addr, buf, bufSize, bytesWritten)
 
 def sync_player_control(pid):
-
         # Check if animation is playing.
     if bpy.context.screen.is_animation_playing:
         anim_byte = 0
@@ -189,17 +172,16 @@ class Screenshot_Sequence(bpy.types.Operator):
     @staticmethod
     def frame_stepper():
         _win = util_dol()
-
         _win.set_focus()
         keyboard.send_keys("{VK_F4 down}"
                            "{VK_F4 up}")
         bpy.ops.screen.frame_offset(delta=1)
-        time.sleep(2)
+        time.sleep(3)
 
     def modal(self, context, event):
         scene = context.scene
 
-        if event.type in {'ESC'} or scene.frame_current > scene.frame_end:
+        if event.type in {'SPACE'} or scene.frame_current > scene.frame_end:
             self.cancel(context)
             return {'CANCELLED'}
 
@@ -223,7 +205,6 @@ class Screenshot_Sequence(bpy.types.Operator):
 class Multi_Op(bpy.types.Operator):
     bl_idname = "multi.op"
     bl_label = "Multiple Operators"
-    
     action: EnumProperty(
     items=[
         ('LOAD', 'load state', 'load state'),
@@ -257,19 +238,15 @@ class EMC_Control_Panel(Panel):
     bl_category = "Melee Control Panel"
     bl_context = "objectmode"
 
-
     @classmethod
     def poll(self,context):
         return context.object is not None
 
     def draw(self, context):
         layout = self.layout
-        scene = context.scene
         wm = context.window_manager
-        EMCTool = scene.emc_tool
         label_sync = "Sync Media Controls" if wm.sync_m_toggle else "Sync Media Controls"
         
-        #layout.prop(EMCTool, "pid_entry")
         layout.operator("wm.sync_cam")
         layout.prop(wm, 'sync_m_toggle', text=label_sync, toggle=True)
         layout.operator('multi.op', text='Load Save State').action = 'LOAD'
@@ -289,27 +266,22 @@ class EMC_Control_Panel(Panel):
 # ------------------------------------------------------------------------
 
 classes = (
-    MyProperties,
     EMC_Control_Panel,
     Sync_Cam_Pos,
     Sync_Media_Controls,
     Multi_Op,
     Screenshot_Sequence,
-
-)
+    )
 
 def register():
     from bpy.utils import register_class
     for cls in classes:
         register_class(cls)
 
-    bpy.types.Scene.emc_tool = PointerProperty(type=MyProperties)
-
 def unregister():
     from bpy.utils import unregister_class
     for cls in reversed(classes):
         unregister_class(cls)
-    del bpy.types.Scene.emc_tool
 
 if __name__ == "__main__":
     register()
