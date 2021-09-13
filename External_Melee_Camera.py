@@ -1,4 +1,5 @@
 import bpy
+import math
 import time
 import struct
 from ctypes import *
@@ -77,10 +78,10 @@ def sync_blender_cam(pid):
     cam_loc[0] = cam_loc[0] * -1
     cam_loc[2] = cam_loc[2] * -1
         # fov in mm, unsure of the true unit of measurement in melee.
-    fov = cam.data.lens
+    fov = (math.degrees(cam.data.angle))
         # List object vector data
     loc_data = [org_loc, cam_loc]
-        # Pack list into big endian bytes. (">f")
+        # Pack matrix into big endian bytes. (">f")
     mat_bytes = b''
     for r in loc_data:
         for c in r:
