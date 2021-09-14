@@ -20,6 +20,7 @@ from bpy.types import (Panel,
                        )
 from pywinauto import Application, keyboard
 
+
 # ------------------------------------------------------------------------
 #    Functions
 # ------------------------------------------------------------------------ 
@@ -49,7 +50,7 @@ def process_ops(pid, addr, buf, bufSize, bytesWritten):
     CloseHandle(processHandle)
 
 def dol_pid():
-        # psutil to automatically grab Dolphins PID. test
+        # psutil to automatically grab Dolphins PID.
     process_name = "Slippi Dolphin"
     pid = None
 
@@ -60,10 +61,10 @@ def dol_pid():
 
 def util_dol():
     pid = dol_pid()
-    app = Application().connect(process=pid)
-    win = app['Faster Melee - Slippi(2.3.6) - Playback']
+    app = Application(backend="uia").connect(process=pid)
+    dlg = app['Faster Melee - Slippi(2.3.6) - Playback']
         # Changes focus and sends key.
-    return win
+    return dlg
 
 def sync_blender_cam(pid):
         # Define Camera and Origin
@@ -130,7 +131,7 @@ class Sync_Cam_Pos(bpy.types.Operator):
     def execute(self, context):
         wm = context.window_manager
         # 0.05 seems to be a good in-between for fps/performance.
-        self._timer = wm.event_timer_add(0.05, window=context.window)
+        self._timer = wm.event_timer_add(0.01, window=context.window)
         wm.modal_handler_add(self)
         return {'RUNNING_MODAL'}
 
@@ -169,13 +170,14 @@ class Screenshot_Sequence(bpy.types.Operator):
     bl_idname = "wm.ss_seq"
     bl_label = "Image Sequence"
     _timer = None
-
+    
     @staticmethod
     def frame_stepper():
-        _win = util_dol()
-        _win.set_focus()
-        keyboard.send_keys("{VK_F4 down}"
-                           "{VK_F4 up}")
+        pid = dol_pid()
+        app = Application(backend="uia").connect(process=pid)
+        dlg = app['Faster Melee - Slippi(2.3.6) - Playback']
+        app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].click()
+
         bpy.ops.screen.frame_offset(delta=1)
         time.sleep(3)
 
@@ -219,11 +221,11 @@ class Multi_Op(bpy.types.Operator):
 
     @staticmethod
     def sync_frame_end():
-        _win = util_dol()
+        _dlg = util_dol()
         # Go to frame start.
         bpy.ops.screen.frame_jump(end=False)
         # Changes focus and sends key.
-        _win.set_focus()
+        _dlg.set_focus()
         keyboard.send_keys("{VK_F3 down}"
                             "{VK_F3 up}")
 
