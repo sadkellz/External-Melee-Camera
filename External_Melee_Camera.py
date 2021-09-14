@@ -1,25 +1,15 @@
-import bpy
 import math
-import time
 import struct
+import time
 from ctypes import *
 from ctypes.wintypes import *
-import psutil
-from bpy.props import (StringProperty,
-                       BoolProperty,
-                       IntProperty,
-                       FloatProperty,
-                       FloatVectorProperty,
-                       EnumProperty,
-                       PointerProperty,
-                       )
-from bpy.types import (Panel,
-                       Menu,
-                       Operator,
-                       PropertyGroup,
-                       )
 from pywinauto import Application, keyboard
-
+from pathlib import Path
+import psutil
+# ------------------
+import bpy
+from bpy.props import (EnumProperty)
+from bpy.types import Panel
 
 # ------------------------------------------------------------------------
 #    Functions
@@ -173,13 +163,19 @@ class Screenshot_Sequence(bpy.types.Operator):
     
     @staticmethod
     def frame_stepper():
+        root_directory = Path('C://Users//fores//AppData//Roaming//Slippi Launcher//playback//User//ScreenShots//GALE01')
         pid = dol_pid()
         app = Application(backend="uia").connect(process=pid)
         dlg = app['Faster Melee - Slippi(2.3.6) - Playback']
         app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].click()
 
+        while True:
+            size = sum(f.stat().st_size for f in root_directory.glob('**/*') if f.is_file())
+            time.sleep(0.5)
+            size2 = sum(f.stat().st_size for f in root_directory.glob('**/*') if f.is_file())
+            if size == size2:
+                break
         bpy.ops.screen.frame_offset(delta=1)
-        time.sleep(3)
 
     def modal(self, context, event):
         scene = context.scene
@@ -196,7 +192,7 @@ class Screenshot_Sequence(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
         wm = context.window_manager
-        self._timer = wm.event_timer_add(1, window=context.window)
+        self._timer = wm.event_timer_add(0.1, window=context.window)
         wm.modal_handler_add(self)
         scene.frame_set(scene.frame_start)
         return {'RUNNING_MODAL'}
