@@ -167,8 +167,13 @@ class Screenshot_Sequence(bpy.types.Operator):
         pid = dol_pid()
         app = Application(backend="uia").connect(process=pid)
         dlg = app['Faster Melee - Slippi(2.3.6) - Playback']
-        app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].click()
+        app.window(best_match='Faster Melee - Slippi(2.3.6) - Playback', visible_only=False).restore()
+        app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].invoke()
+        dlg.minimize()
 
+        #dlg.menu_select("Emulation->Take Screenshot")
+        #dlg.menu_select("Emulation->Frame Advance")
+        #time.sleep(0.1)
         while True:
             size = sum(f.stat().st_size for f in root_directory.glob('**/*') if f.is_file())
             time.sleep(0.5)
@@ -221,10 +226,9 @@ class Multi_Op(bpy.types.Operator):
         # Go to frame start.
         bpy.ops.screen.frame_jump(end=False)
         # Changes focus and sends key.
-        _dlg.set_focus()
-        keyboard.send_keys("{VK_F3 down}"
-                            "{VK_F3 up}")
-
+        _dlg.menu_select("Emulation -> Load State")
+        _dlg.Load_State.MenuItem14.select()
+        time.sleep(0.01)
 # ------------------------------------------------------------------------
 #    Panel in Object Mode
 # ------------------------------------------------------------------------
