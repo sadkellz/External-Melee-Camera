@@ -1,16 +1,15 @@
 import math
 import struct
 import time
+from pywinauto import Application
 from ctypes import *
 from ctypes.wintypes import *
-from pywinauto import Application
 from pathlib import Path
 import psutil
 # ------------------
 import bpy
-from bpy.props import (EnumProperty)
-from bpy.types import Panel
-
+from bpy.props import (EnumProperty, BoolProperty,PointerProperty,)
+from bpy.types import (Panel, PropertyGroup,)
 # ------------------------------------------------------------------------
 #    Functions
 # ------------------------------------------------------------------------ 
@@ -161,24 +160,32 @@ class Screenshot_Sequence(bpy.types.Operator):
     bl_label = "Image Sequence"
     _timer = None
     
-    @staticmethod
-    def frame_stepper():
-        root_directory = Path('C://Users//fores//AppData//Roaming//Slippi Launcher//playback//User//ScreenShots//GALE01')
-        pid = dol_pid()
-        app = Application(backend="uia").connect(process=pid)
-        dlg = app['Faster Melee - Slippi(2.3.6) - Playback']
-        app.window(best_match='Faster Melee - Slippi(2.3.6) - Playback', visible_only=False).restore()
-        app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].invoke()
-        #dlg.menu_select("Emulation->Frame Advance")
-        dlg.minimize()
+    _root_directory = Path('C://Users//fores//AppData//Roaming//Slippi Launcher//playback//User//ScreenShots//GALE01')
+    _pid = dol_pid()
+    _app = Application(backend="uia").connect(process=_pid)
+    _dlg = _app['Faster Melee - Slippi(2.3.6) - Playback']
 
-        #dlg.menu_select("Emulation->Take Screenshot")
-        #dlg.menu_select("Emulation->Frame Advance")
-        #time.sleep(0.1)
+    def seq_while_pause(self):
+        self._app.window(best_match='Faster Melee - Slippi(2.3.6) - Playback', visible_only=False).restore()
+        self._app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].invoke()
+        self._dlg.minimize()
         while True:
-            size = sum(f.stat().st_size for f in root_directory.glob('**/*') if f.is_file())
+            size = sum(f.stat().st_size for f in self._root_directory.glob('**/*') if f.is_file())
             time.sleep(0.5)
-            size2 = sum(f.stat().st_size for f in root_directory.glob('**/*') if f.is_file())
+            size2 = sum(f.stat().st_size for f in self._root_directory.glob('**/*') if f.is_file())
+            if size == size2:
+                break
+        bpy.ops.screen.frame_offset(delta=1)
+
+    def seq_while_play(self):
+        self._app.window(best_match='Faster Melee - Slippi(2.3.6) - Playback', visible_only=False).restore()
+        self._app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].invoke()
+        self._dlg.menu_select("Emulation->Frame Advance")
+        self._dlg.minimize()
+        while True:
+            size = sum(f.stat().st_size for f in self._root_directory.glob('**/*') if f.is_file())
+            time.sleep(0.5)
+            size2 = sum(f.stat().st_size for f in self._root_directory.glob('**/*') if f.is_file())
             if size == size2:
                 break
         bpy.ops.screen.frame_offset(delta=1)
@@ -186,12 +193,15 @@ class Screenshot_Sequence(bpy.types.Operator):
     def modal(self, context, event):
         scene = context.scene
 
-        if event.type in {'SPACE'} or scene.frame_current > scene.frame_end:
+        if event.type in {'SPACE'} or scene.frame_current > scene.frame_end - 1:
             self.cancel(context)
             return {'CANCELLED'}
 
         if event.type == 'TIMER':
-            self.frame_stepper()
+            if (context.scene.my_tool.is_paused == True):
+                self.seq_while_play()
+            else:
+                self.seq_while_pause()
             bpy.context.view_layer.update()
         return {'PASS_THROUGH'}
 
@@ -230,6 +240,19 @@ class Multi_Op(bpy.types.Operator):
         _dlg.menu_select("Emulation -> Load State")
         _dlg.Load_State.MenuItem14.select()
         time.sleep(0.01)
+
+# ------------------------------------------------------------------------
+#    Scene Properties
+# ------------------------------------------------------------------------
+
+class MyProperties(PropertyGroup):
+
+    is_paused: BoolProperty(
+        name="Frame Advance",
+        description="Change operation of Img Seq if Melee is paused/unpaused.",
+        default = False
+        )
+
 # ------------------------------------------------------------------------
 #    Panel in Object Mode
 # ------------------------------------------------------------------------
@@ -250,11 +273,13 @@ class EMC_Control_Panel(Panel):
         layout = self.layout
         wm = context.window_manager
         label_sync = "Sync Media Controls" if wm.sync_m_toggle else "Sync Media Controls"
-        
+        mytool = context.scene.my_tool
+
         layout.operator("wm.sync_cam")
         layout.prop(wm, 'sync_m_toggle', text=label_sync, toggle=True)
         layout.operator('multi.op', text='Load Save State').action = 'LOAD'
         layout.operator("wm.ss_seq")
+        layout.prop(mytool, "is_paused")
         layout.separator()
 
     def update_function(self, context):
@@ -265,11 +290,13 @@ class EMC_Control_Panel(Panel):
     bpy.types.WindowManager.sync_m_toggle = bpy.props.BoolProperty(
                                                  default = False,
                                                  update = update_function)
+
 # ------------------------------------------------------------------------
 #    Registration
 # ------------------------------------------------------------------------
 
 classes = (
+    MyProperties,
     EMC_Control_Panel,
     Sync_Cam_Pos,
     Sync_Media_Controls,
@@ -282,10 +309,13 @@ def register():
     for cls in classes:
         register_class(cls)
 
+    bpy.types.Scene.my_tool = PointerProperty(type=MyProperties)
+
 def unregister():
     from bpy.utils import unregister_class
     for cls in reversed(classes):
         unregister_class(cls)
+    del bpy.types.Scene.my_tool
 
 if __name__ == "__main__":
     register()
