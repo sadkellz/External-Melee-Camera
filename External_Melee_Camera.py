@@ -3,7 +3,7 @@ import struct
 import time
 from ctypes import *
 from ctypes.wintypes import *
-from pywinauto import Application, keyboard
+from pywinauto import Application
 from pathlib import Path
 import psutil
 # ------------------
@@ -169,6 +169,7 @@ class Screenshot_Sequence(bpy.types.Operator):
         dlg = app['Faster Melee - Slippi(2.3.6) - Playback']
         app.window(best_match='Faster Melee - Slippi(2.3.6) - Playback', visible_only=False).restore()
         app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].invoke()
+        #dlg.menu_select("Emulation->Frame Advance")
         dlg.minimize()
 
         #dlg.menu_select("Emulation->Take Screenshot")
