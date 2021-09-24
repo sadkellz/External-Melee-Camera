@@ -1,3 +1,13 @@
+bl_info = {
+    "name": "External Melee Camera",
+    "author": "KELLZ",
+    "version": (1, 0),
+    "blender": (2, 80, 0),
+    "category": "Tools",
+    "description": "Control Melee's Camera from Blender.",
+    "wiki_url": "https://github.com/sadkellz/External-Melee-Camera",
+}
+
 import math
 import struct
 import time
@@ -6,13 +16,13 @@ from ctypes import *
 from ctypes.wintypes import *
 from pathlib import Path
 import psutil
-# ------------------
+# -------------
 import bpy
 from bpy.props import (EnumProperty, BoolProperty,PointerProperty,)
 from bpy.types import (Panel, PropertyGroup,)
-# ------------------------------------------------------------------------
+# -------------
 #    Functions
-# ------------------------------------------------------------------------ 
+# -------------
 
         # ctypes k32 memory bullshit put into a function, so you can repurpose for multiple functions.
         # https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
@@ -47,13 +57,6 @@ def dol_pid():
         if process_name in proc.name():
             pid = proc.pid
     return pid
-
-def util_dol():
-    pid = dol_pid()
-    app = Application(backend="uia").connect(process=pid)
-    dlg = app['Faster Melee - Slippi(2.3.6) - Playback']
-        # Changes focus and sends key.
-    return dlg
 
 def sync_blender_cam(pid):
         # Define Camera and Origin
@@ -97,9 +100,9 @@ def sync_player_control(pid):
     bytesWritten = c_ulonglong()
     process_ops(pid, addr, buf, bufSize, bytesWritten)   
 
-# ------------------------------------------------------------------------
+# -------------
 #    Operators
-# ------------------------------------------------------------------------
+# -------------
 
 class Sync_Cam_Pos(bpy.types.Operator):
     """A Timer that consistently writes to Dolphins memory"""
@@ -164,6 +167,7 @@ class Screenshot_Sequence(bpy.types.Operator):
     _pid = dol_pid()
     _app = Application(backend="uia").connect(process=_pid)
     _dlg = _app['Faster Melee - Slippi(2.3.6) - Playback']
+
 
     def seq_while_pause(self):
         self._app.window(best_match='Faster Melee - Slippi(2.3.6) - Playback', visible_only=False).restore()
@@ -233,7 +237,9 @@ class Multi_Op(bpy.types.Operator):
 
     @staticmethod
     def sync_frame_end():
-        _dlg = util_dol()
+        _pid = dol_pid()
+        _app = Application(backend="uia").connect(process=_pid)
+        _dlg = _app['Faster Melee - Slippi(2.3.6) - Playback']
         # Go to frame start.
         bpy.ops.screen.frame_jump(end=False)
         # Changes focus and sends key.
@@ -241,9 +247,9 @@ class Multi_Op(bpy.types.Operator):
         _dlg.Load_State.MenuItem14.select()
         time.sleep(0.01)
 
-# ------------------------------------------------------------------------
+# ---------------------
 #    Scene Properties
-# ------------------------------------------------------------------------
+# ---------------------
 
 class MyProperties(PropertyGroup):
 
@@ -253,9 +259,9 @@ class MyProperties(PropertyGroup):
         default = False
         )
 
-# ------------------------------------------------------------------------
+# ------------------------
 #    Panel in Object Mode
-# ------------------------------------------------------------------------
+# ------------------------
 
 class EMC_Control_Panel(Panel):
     bl_label = "External Melee Camera"
@@ -291,9 +297,9 @@ class EMC_Control_Panel(Panel):
                                                  default = False,
                                                  update = update_function)
 
-# ------------------------------------------------------------------------
+# ----------------
 #    Registration
-# ------------------------------------------------------------------------
+# ----------------
 
 classes = (
     MyProperties,
