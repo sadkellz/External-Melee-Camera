@@ -1,22 +1,19 @@
 import pymem
+from emc_functions import find_emu_mem
 from pathlib import Path
-
-SaveState = 0x8F3B30
-LoadState = 0x8F2430
-ScreenShot = 0x8851C0
-FrameStep = 0x1F8380
-FreeLook = None
 
 ROOT_DIRECTORY = Path('C://Users//fores//AppData//Roaming//Slippi Launcher//playback//User//ScreenShots//GALE01')
 pm = pymem.Pymem("Dolphin.exe")
 
+EMU_SIZE = 0x2000000
+EMU_DIST = 0x10000
+GALE01 = find_emu_mem()
 
-# Injects a python interpreter, so we can call functions from Dolphins main thread via offset
-def call_native_func(fnc_ptr, fnc_type, fnc_args):
-    pm.inject_python_interpreter()
-    fnc_adr = '0x' + format((pm.base_address + fnc_ptr), "08X")
-    shell_code = """import ctypes
-functype = ctypes.CFUNCTYPE({})
-func = functype({})
-func({})""".format(fnc_type, fnc_adr, fnc_args)
-    pm.inject_python_shellcode(shell_code)
+SAVE_STATE = 0x8F3B30
+LOAD_STATE = 0x8F2430
+SCREEN_SHOT = 0x8851C0
+FRAME_STEP = 0x1F8380
+FREE_LOOK = None
+
+CAM_START = 0x453040
+PAUSE_BIT = 0x479D68

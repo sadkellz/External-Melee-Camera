@@ -4,7 +4,51 @@ import bpy
 from . emc_common import *
 
 
-def sync_blender_cam():
+# Injects a python interpreter, so we can call functions from Dolphins main thread via offset
+def call_native_func(fnc_ptr, fnc_type, fnc_args):
+    pm.inject_python_interpreter()
+    fnc_adr = '0x' + format((pm.base_address + fnc_ptr), "08X")
+    shell_code = """import ctypes
+functype = ctypes.CFUNCTYPE({})
+func = functype({})
+func({})""".format(fnc_type, fnc_adr, fnc_args)
+    pm.inject_python_shellcode(shell_code)
+
+
+def pattern_scan_all(handle, pattern, *, return_multiple=False):
+    next_region = 0
+    found = []
+
+    while next_region < 0x7FFFFFFF0000:
+        next_region, page_found = pymem.pattern.scan_pattern_page(
+            handle,
+            next_region,
+            pattern,
+            return_multiple=return_multiple
+        )
+
+        if not return_multiple and page_found:
+            if (next_region - page_found) == int(EMU_SIZE):
+                return page_found
+
+        if page_found:
+            if (next_region - page_found) == int(EMU_SIZE):
+                found += page_found
+
+    if not return_multiple:
+        return None
+
+    return found
+
+
+def find_emu_mem():
+    handle = pm.process_handle
+    byte_pattern = bytes.fromhex("47 41 4C 45 30 31 00 02")
+    found = pattern_scan_all(handle, byte_pattern)
+    return found
+
+
+def sync_blender_cam(addr):
     # Define Camera and Origin
     org = bpy.data.objects['Origin']
     cam = bpy.data.objects['Camera']
@@ -29,9 +73,7 @@ def sync_blender_cam():
 
     # Add fov data to the end of camera data.
     mat_bytes += struct.pack(">f", fov)
-    addr = 0x0000000080443040
-    buf = mat_bytes
-    pm.write_bytes(addr, buf, len(buf))
+    pm.write_bytes(addr, mat_bytes, len(mat_bytes))
 
 
 def sync_blender_cam_freelook():
@@ -70,13 +112,11 @@ def sync_blender_cam_freelook_r():
     pm.write_bytes(addr, buf, len(buf))
 
 
-def sync_player_control():
+def sync_player_control(addr):
     if bpy.context.screen.is_animation_playing:
         anim_byte = 0
     else:
         anim_byte = 1
-    # Frame advance boolean in memory.
-    addr = 0x0000000080469D68
     buf = struct.pack(">b", anim_byte)
     pm.write_bytes(addr, buf, len(buf))
 
@@ -86,7 +126,7 @@ def save_state():
     fnc_args = '1'
     # Go to frame start.
     bpy.ops.screen.frame_jump(end=False)
-    call_native_func(SaveState, fnc_type, fnc_args)
+    call_native_func(SAVE_STATE, fnc_type, fnc_args)
 
 
 def load_state():
@@ -94,16 +134,16 @@ def load_state():
     fnc_args = '1'
     # Go to frame start.
     bpy.ops.screen.frame_jump(end=False)
-    call_native_func(LoadState, fnc_type, fnc_args)
+    call_native_func(LOAD_STATE, fnc_type, fnc_args)
 
 
 def take_screenshot():
     fnc_type = 'ctypes.c_int, ctypes.c_bool'
     fnc_args = '1, False'
-    call_native_func(ScreenShot, fnc_type, fnc_args)
+    call_native_func(SCREEN_SHOT, fnc_type, fnc_args)
 
 
 def frame_step():
     fnc_type = 'ctypes.c_int'
     fnc_args = ''
-    call_native_func(FrameStep, fnc_type, fnc_args)
+    call_native_func(FRAME_STEP, fnc_type, fnc_args)
