@@ -85,7 +85,7 @@ def sync_player_control():
 
 def save_state():
     fnc_type = 'ctypes.c_int'
-    fnc_args = ''
+    fnc_args = '1'
     # Go to frame start.
     bpy.ops.screen.frame_jump(end=False)
     call_native_func(SaveState, fnc_type, fnc_args)
@@ -93,7 +93,7 @@ def save_state():
 
 def load_state():
     fnc_type = 'ctypes.c_int'
-    fnc_args = ''
+    fnc_args = '1'
     # Go to frame start.
     bpy.ops.screen.frame_jump(end=False)
     call_native_func(LoadState, fnc_type, fnc_args)
