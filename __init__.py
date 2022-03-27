@@ -1,6 +1,5 @@
 import bpy
 from . emc_panel import *
-from . emc_op import *
 from . emc_functions import *
 
 bl_info = {

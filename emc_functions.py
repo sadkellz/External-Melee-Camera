@@ -1,7 +1,5 @@
-import ctypes
 import math
 import struct
-import time
 import bpy
 from . emc_common import *
 

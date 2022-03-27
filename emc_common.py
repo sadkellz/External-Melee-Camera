@@ -1,6 +1,4 @@
 import pymem
-from ctypes import *
-from ctypes.wintypes import *
 from pathlib import Path
 
 SaveState = 0x8F3B30

@@ -1,4 +1,5 @@
 import bpy
+import time
 from . emc_functions import *
 
 
@@ -15,16 +16,15 @@ class syncCamera(bpy.types.Operator):
 
         if event.type == 'TIMER':
             sync_blender_cam()
-            #sync_blender_cam_freelook()
-            #sync_blender_cam_freelook_r()
+            # sync_blender_cam_freelook()
+            # sync_blender_cam_freelook_r()
             if context.scene.my_tool.is_media_sync:
                 sync_player_control()
         return {'PASS_THROUGH'}
 
     def execute(self, context):
         wm = context.window_manager
-        # 0.05 seems to be a good in-between for fps/performance.
-        self._timer = wm.event_timer_add(0.05, window=context.window)
+        self._timer = wm.event_timer_add(0.01, window=context.window)
         wm.modal_handler_add(self)
         return {'RUNNING_MODAL'}
 
@@ -42,22 +42,23 @@ def wait_for_screenshot():
             break
 
 
+def img_seq(context):
+    take_screenshot()
+    # in-game paused camera sequence vs paused
+    if context.scene.my_tool.is_paused:
+        frame_step()
+        wait_for_screenshot()
+        bpy.ops.screen.frame_offset(delta=1)
+    else:
+        wait_for_screenshot()
+        bpy.ops.screen.frame_offset(delta=1)
+
+
 class screenshotSequence(bpy.types.Operator):
     """Creates an image sequence for the duration of the frame range."""
     bl_idname = "wm.ss_seq"
     bl_label = "Image Sequence"
     _timer = None
-
-    def img_seq(self, context):
-        take_screenshot()
-        # in-game paused camera sequence vs paused
-        if context.scene.my_tool.is_paused:
-            frame_step()
-            wait_for_screenshot()
-            bpy.ops.screen.frame_offset(delta=1)
-        else:
-            wait_for_screenshot()
-            bpy.ops.screen.frame_offset(delta=1)
 
     def modal(self, context, event):
         scene = context.scene
@@ -66,7 +67,7 @@ class screenshotSequence(bpy.types.Operator):
             return {'CANCELLED'}
 
         if event.type == 'TIMER':
-            self.img_seq(context)
+            img_seq(context)
             bpy.context.view_layer.update()
         return {'PASS_THROUGH'}
 
