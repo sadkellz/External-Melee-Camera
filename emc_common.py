@@ -1,5 +1,4 @@
 import pymem
-from emc_functions import find_emu_mem
 from pathlib import Path
 
 ROOT_DIRECTORY = Path('C://Users//fores//AppData//Roaming//Slippi Launcher//playback//User//ScreenShots//GALE01')
@@ -7,7 +6,6 @@ pm = pymem.Pymem("Dolphin.exe")
 
 EMU_SIZE = 0x2000000
 EMU_DIST = 0x10000
-GALE01 = find_emu_mem()
 
 SAVE_STATE = 0x8F3B30
 LOAD_STATE = 0x8F2430

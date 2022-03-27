@@ -3,6 +3,7 @@ import time
 from . emc_functions import *
 from . emc_common import *
 
+GALE01 = find_emu_mem()
 
 class syncCamera(bpy.types.Operator):
     """A timer that consistently writes to Dolphins memory"""
