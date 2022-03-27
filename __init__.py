@@ -3,11 +3,10 @@ from . emc_panel import *
 from . emc_op import *
 from . emc_functions import *
 
-
 bl_info = {
     "name": "External Melee Camera",
     "author": "KELLZ",
-    "version": (1, 0, 0),
+    "version": (1, 1, 0),
     "blender": (3, 0, 0),
     "category": "Tools",
     "description": "Control Melee's Camera from Blender.",
@@ -19,8 +18,7 @@ def register():
     from bpy.utils import register_class
     for cls in classes:
         register_class(cls)
-
-    bpy.types.Scene.my_tool = PointerProperty(type=MyProperties)
+    bpy.types.Scene.my_tool = PointerProperty(type=controlProperties)
 
 
 def unregister():

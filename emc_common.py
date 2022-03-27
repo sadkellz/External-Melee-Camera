@@ -1,42 +1,24 @@
-import psutil
+import pymem
 from ctypes import *
 from ctypes.wintypes import *
 from pathlib import Path
-from pywinauto import *
 
-def dol_proc():
-    process_name = "DolphinD"
-    pid = None
-
-    for proc in psutil.process_iter():
-        if process_name in proc.name():
-            pid = proc.pid
-    return pid
-
-
-# https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
-def process_ops(pid, addr, buf, bufSize, bytesWritten):
-    k32 = WinDLL('kernel32', use_last_error=True)
-    PROCESS_ALL_ACCESS = 0x1F0FFF
-
-    OpenProcess = k32.OpenProcess
-    OpenProcess.argtypes = [DWORD, BOOL, DWORD]
-    OpenProcess.restype = HANDLE
-
-    processHandle = OpenProcess(PROCESS_ALL_ACCESS, False, pid)
-
-    CloseHandle = k32.CloseHandle
-    CloseHandle.argtypes = [HANDLE]
-    CloseHandle.restype = BOOL
-
-    WriteProcessMemory = k32.WriteProcessMemory
-    WriteProcessMemory.argtypes = [HANDLE, LPCVOID, LPVOID, c_size_t, POINTER(c_size_t)]
-    WriteProcessMemory.restype = BOOL
-    WriteProcessMemory(processHandle, addr, c_char_p(buf), len(bufSize), byref(bytesWritten))
-
-    CloseHandle(processHandle)
+SaveState = 0x8F3B30
+LoadState = 0x8F2430
+ScreenShot = 0x8851C0
+FrameStep = 0x1F8380
+FreeLook = None
 
 ROOT_DIRECTORY = Path('C://Users//fores//AppData//Roaming//Slippi Launcher//playback//User//ScreenShots//GALE01')
-pid = dol_proc()
-app = Application(backend="uia").connect(process=pid)
-dlg = app['Faster Melee - Slippi(2.3.6) - Playback']
+pm = pymem.Pymem("Dolphin.exe")
+
+
+# Injects a python interpreter, so we can call functions from Dolphins main thread via offset
+def call_native_func(fnc_ptr, fnc_type, fnc_args):
+    pm.inject_python_interpreter()
+    fnc_adr = '0x' + format((pm.base_address + fnc_ptr), "08X")
+    shell_code = """import ctypes
+functype = ctypes.CFUNCTYPE({})
+func = functype({})
+func({})""".format(fnc_type, fnc_adr, fnc_args)
+    pm.inject_python_shellcode(shell_code)

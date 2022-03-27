@@ -1,6 +1,7 @@
 import bpy
 from . emc_functions import *
 
+
 class syncCamera(bpy.types.Operator):
     """A timer that consistently writes to Dolphins memory"""
     bl_idname = "wm.sync_cam"
@@ -13,9 +14,9 @@ class syncCamera(bpy.types.Operator):
             return {'CANCELLED'}
 
         if event.type == 'TIMER':
-            #sync_blender_cam()
-            sync_blender_cam_freelook()
-            sync_blender_cam_freelook_r()
+            sync_blender_cam()
+            #sync_blender_cam_freelook()
+            #sync_blender_cam_freelook_r()
             if context.scene.my_tool.is_media_sync:
                 sync_player_control()
         return {'PASS_THROUGH'}
@@ -32,25 +33,31 @@ class syncCamera(bpy.types.Operator):
         wm.event_timer_remove(self._timer)
 
 
+def wait_for_screenshot():
+    while True:
+        size = sum(f.stat().st_size for f in ROOT_DIRECTORY.glob('**/*') if f.is_file())
+        time.sleep(0.5)
+        size2 = sum(f.stat().st_size for f in ROOT_DIRECTORY.glob('**/*') if f.is_file())
+        if size == size2:
+            break
+
+
 class screenshotSequence(bpy.types.Operator):
     """Creates an image sequence for the duration of the frame range."""
     bl_idname = "wm.ss_seq"
     bl_label = "Image Sequence"
     _timer = None
 
-    def start_seq(self, context):
-        self.app.window(best_match='Faster Melee - Slippi(2.3.6) - Playback', visible_only=False).restore()
-        self.app['Faster Melee - Slippi (2.3.6) - PlaybackDialog']['ScrShot'].invoke()
+    def img_seq(self, context):
+        take_screenshot()
+        # in-game paused camera sequence vs paused
         if context.scene.my_tool.is_paused:
-            self.dlg.menu_select("Emulation->Frame Advance")
-
-        while True:
-            size = sum(f.stat().st_size for f in ROOT_DIRECTORY.glob('**/*') if f.is_file())
-            time.sleep(0.5)
-            size2 = sum(f.stat().st_size for f in ROOT_DIRECTORY.glob('**/*') if f.is_file())
-            if size == size2:
-                break
-        bpy.ops.screen.frame_offset(delta=1)
+            frame_step()
+            wait_for_screenshot()
+            bpy.ops.screen.frame_offset(delta=1)
+        else:
+            wait_for_screenshot()
+            bpy.ops.screen.frame_offset(delta=1)
 
     def modal(self, context, event):
         scene = context.scene
@@ -59,7 +66,7 @@ class screenshotSequence(bpy.types.Operator):
             return {'CANCELLED'}
 
         if event.type == 'TIMER':
-            self.start_seq(context)
+            self.img_seq(context)
             bpy.context.view_layer.update()
         return {'PASS_THROUGH'}
 
@@ -76,11 +83,21 @@ class screenshotSequence(bpy.types.Operator):
         wm.event_timer_remove(self._timer)
 
 
-class loadState(bpy.types.Operator):
+class menuLoadstate(bpy.types.Operator):
     """Loads the slot 1 save state."""
-    bl_idname = "wm.save_state"
-    bl_label = "Load Save State"
+    bl_idname = "wm.load_state"
+    bl_label = "Load State"
 
     def execute(self, context):
-        load_save_state()
+        load_state()
+        return {'FINISHED'}
+
+
+class menuSavestate(bpy.types.Operator):
+    """Saves a state to slot 1."""
+    bl_idname = "wm.save_state"
+    bl_label = "Save State"
+
+    def execute(self, context):
+        save_state()
         return {'FINISHED'}

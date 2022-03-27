@@ -5,11 +5,11 @@ from . emc_functions import *
 from . emc_op import *
 
 
-class MyProperties(PropertyGroup):
+class controlProperties(PropertyGroup):
 
     is_paused: BoolProperty(
         name="Frame Advance",
-        description="Change operation of Img Seq if Melee is paused/unpaused.",
+        description="Change operation of Img Seq if Melee is paused/un-paused.",
         default=False
         )
 
@@ -39,6 +39,7 @@ class emcControlPanel(Panel):
 
         layout.operator("wm.sync_cam")
         layout.operator('wm.save_state')
+        layout.operator('wm.load_state')
         layout.operator("wm.ss_seq")
         layout.prop(mytool, "is_paused")
         layout.prop(mytool, "is_media_sync")
@@ -46,9 +47,10 @@ class emcControlPanel(Panel):
 
 
 classes = (
-    MyProperties,
+    controlProperties,
     emcControlPanel,
     syncCamera,
-    loadState,
+    menuSavestate,
+    menuLoadstate,
     screenshotSequence,
     )

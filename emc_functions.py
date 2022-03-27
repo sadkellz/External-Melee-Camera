@@ -1,8 +1,10 @@
+import ctypes
 import math
 import struct
 import time
 import bpy
 from . emc_common import *
+
 
 def sync_blender_cam():
     # Define Camera and Origin
@@ -31,9 +33,8 @@ def sync_blender_cam():
     mat_bytes += struct.pack(">f", fov)
     addr = 0x0000000080443040
     buf = mat_bytes
-    bufSize = mat_bytes
-    bytesWritten = c_ulonglong()
-    process_ops(pid, addr, buf, bufSize, bytesWritten)
+    pm.write_bytes(addr, buf, len(buf))
+
 
 def sync_blender_cam_freelook():
     # viewrotation
@@ -54,9 +55,8 @@ def sync_blender_cam_freelook():
 
     addr = 0x0000000003C5F4C0
     buf = mat_bytes
-    bufSize = mat_bytes
-    bytesWritten = c_ulonglong()
-    process_ops(pid, addr, buf, bufSize, bytesWritten)
+    pm.write_bytes(addr, buf, len(buf))
+
 
 def sync_blender_cam_freelook_r():
     cam = bpy.data.objects['Camera']
@@ -69,9 +69,7 @@ def sync_blender_cam_freelook_r():
 
     addr = 0x0000000003C5F470
     buf = mat_bytes
-    bufSize = mat_bytes
-    bytesWritten = c_ulonglong()
-    process_ops(pid, addr, buf, bufSize, bytesWritten)
+    pm.write_bytes(addr, buf, len(buf))
 
 
 def sync_player_control():
@@ -82,15 +80,32 @@ def sync_player_control():
     # Frame advance boolean in memory.
     addr = 0x0000000080469D68
     buf = struct.pack(">b", anim_byte)
-    bufSize = buf
-    bytesWritten = c_ulonglong()
-    process_ops(pid, addr, buf, bufSize, bytesWritten)
+    pm.write_bytes(addr, buf, len(buf))
 
 
-def load_save_state():
+def save_state():
+    fnc_type = 'ctypes.c_int'
+    fnc_args = ''
     # Go to frame start.
     bpy.ops.screen.frame_jump(end=False)
-    # Changes focus and send key.
-    dlg.menu_select("Emulation -> Load State")
-    dlg.Load_State.MenuItem14.select()
-    time.sleep(0.01)
+    call_native_func(SaveState, fnc_type, fnc_args)
+
+
+def load_state():
+    fnc_type = 'ctypes.c_int'
+    fnc_args = ''
+    # Go to frame start.
+    bpy.ops.screen.frame_jump(end=False)
+    call_native_func(LoadState, fnc_type, fnc_args)
+
+
+def take_screenshot():
+    fnc_type = 'ctypes.c_int, ctypes.c_bool'
+    fnc_args = '1, False'
+    call_native_func(ScreenShot, fnc_type, fnc_args)
+
+
+def frame_step():
+    fnc_type = 'ctypes.c_int'
+    fnc_args = ''
+    call_native_func(FrameStep, fnc_type, fnc_args)
