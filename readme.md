@@ -23,7 +23,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/sadkellz/External-Melee-Camera/">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="imgs/EMC FONT.png" alt="Logo" width="500" height="250">
   </a>
 
 <h3 align="center">External Melee Camera</h3>
