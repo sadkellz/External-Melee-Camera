@@ -5,6 +5,7 @@ from . emc_common import *
 
 GALE01 = find_emu_mem()
 
+
 class syncCamera(bpy.types.Operator):
     """A timer that consistently writes to Dolphins memory"""
     bl_idname = "wm.sync_cam"

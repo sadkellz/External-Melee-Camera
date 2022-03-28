@@ -1,6 +1,6 @@
+import bpy
 import math
 import struct
-import bpy
 from . emc_common import *
 
 
