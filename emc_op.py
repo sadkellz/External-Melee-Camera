@@ -57,6 +57,12 @@ def img_seq(context):
         bpy.ops.screen.frame_offset(delta=1)
 
 
+def prev_seq(context):
+    frame_step()
+    time.sleep(0.03)
+    bpy.ops.screen.frame_offset(delta=1)
+
+
 class screenshotSequence(bpy.types.Operator):
     """Creates an image sequence for the duration of the frame range."""
     bl_idname = "wm.ss_seq"
@@ -79,6 +85,8 @@ class screenshotSequence(bpy.types.Operator):
         wm = context.window_manager
         self._timer = wm.event_timer_add(0.1, window=context.window)
         wm.modal_handler_add(self)
+        load_state()
+        time.sleep(0.5)
         scene.frame_set(scene.frame_start)
         return {'RUNNING_MODAL'}
 
@@ -105,3 +113,35 @@ class menuSavestate(bpy.types.Operator):
     def execute(self, context):
         save_state()
         return {'FINISHED'}
+
+
+class menuPreview(bpy.types.Operator):
+    """Preview frame range accurately"""
+    bl_idname = "wm.prev_seq"
+    bl_label = "Preview Sequence"
+    _timer = None
+
+    def modal(self, context, event):
+        scene = context.scene
+        if event.type in {'SPACE'} or scene.frame_current > scene.frame_end - 1:
+            self.cancel(context)
+            return {'CANCELLED'}
+
+        if event.type == 'TIMER':
+            prev_seq(context)
+            bpy.context.view_layer.update()
+        return {'PASS_THROUGH'}
+
+    def execute(self, context):
+        scene = context.scene
+        wm = context.window_manager
+        self._timer = wm.event_timer_add(0.1, window=context.window)
+        wm.modal_handler_add(self)
+        load_state()
+        time.sleep(0.5)
+        scene.frame_set(scene.frame_start)
+        return {'RUNNING_MODAL'}
+
+    def cancel(self, context):
+        wm = context.window_manager
+        wm.event_timer_remove(self._timer)

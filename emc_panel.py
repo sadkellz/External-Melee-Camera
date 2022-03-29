@@ -38,9 +38,12 @@ class emcControlPanel(Panel):
         mytool = context.scene.my_tool
 
         layout.operator("wm.sync_cam")
+        layout.separator()
         layout.operator('wm.save_state')
         layout.operator('wm.load_state')
+        layout.separator()
         layout.operator("wm.ss_seq")
+        layout.operator("wm.prev_seq")
         layout.prop(mytool, "is_paused")
         layout.prop(mytool, "is_media_sync")
         layout.separator()
@@ -53,4 +56,5 @@ classes = (
     menuSavestate,
     menuLoadstate,
     screenshotSequence,
+    menuPreview,
     )
