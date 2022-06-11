@@ -123,7 +123,7 @@ def sync_player_control(addr):
 
 def save_state():
     fnc_type = 'ctypes.c_int'
-    fnc_args = '1'
+    fnc_args = ''
     # Go to frame start.
     bpy.ops.screen.frame_jump(end=False)
     call_native_func(SAVE_STATE, fnc_type, fnc_args)
