@@ -17,7 +17,6 @@ def get_ptr(base, offsets):
 
 
 FRAME_INDEX = get_ptr(pm.base_address + index_ptr, [0xC])
-
 EMU_SIZE = 0x2000000
 EMU_DIST = 0x10000
 
