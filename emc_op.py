@@ -41,6 +41,7 @@ def wait_for_screenshot():
         time.sleep(0.5)
         size2 = sum(f.stat().st_size for f in ROOT_DIRECTORY.glob('**/*') if f.is_file())
         if size == size2:
+            time.sleep(0.1)
             break
 
 
@@ -77,12 +78,13 @@ class screenshotSequence(bpy.types.Operator):
         if event.type == 'TIMER':
             img_seq(context)
             bpy.context.view_layer.update()
+            time.sleep(0.1)
         return {'PASS_THROUGH'}
 
     def execute(self, context):
         scene = context.scene
         wm = context.window_manager
-        self._timer = wm.event_timer_add(0.1, window=context.window)
+        self._timer = wm.event_timer_add(0.2, window=context.window)
         wm.modal_handler_add(self)
         load_state()
         time.sleep(0.5)
@@ -134,7 +136,7 @@ class menuPreview(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
         wm = context.window_manager
-        self._timer = wm.event_timer_add(0.1, window=context.window)
+        self._timer = wm.event_timer_add(0.2, window=context.window)
         wm.modal_handler_add(self)
         load_state()
         time.sleep(0.5)
