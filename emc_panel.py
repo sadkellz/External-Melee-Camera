@@ -1,4 +1,3 @@
-import bpy
 from bpy.props import (EnumProperty, BoolProperty, PointerProperty,)
 from bpy.types import (Panel, PropertyGroup)
 from . emc_functions import *

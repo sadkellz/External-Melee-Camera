@@ -1,4 +1,3 @@
-import bpy
 import time
 from . emc_functions import *
 from . emc_common import *

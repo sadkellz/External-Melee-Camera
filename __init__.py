@@ -3,10 +3,11 @@ from . emc_panel import *
 from . emc_functions import *
 
 bl_info = {
-    "name": "External Melee Camera",
+    "name": "External-Melee-Camera",
     "author": "KELLZ",
-    "version": (1, 1, 0),
-    "blender": (3, 0, 0),
+    "version": (1, 2, 0),
+    "blender": (3, 2, 2),
+    "warning": "Requires installation of dependencies",
     "category": "Tools",
     "description": "Control Melee's Camera from Blender.",
     "wiki_url": "https://github.com/sadkellz/External-Melee-Camera",
