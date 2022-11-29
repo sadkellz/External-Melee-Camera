@@ -138,8 +138,8 @@ def load_state():
 
 
 def take_screenshot():
-    fnc_type = 'ctypes.c_int, ctypes.c_bool'
-    fnc_args = '1, False'
+    fnc_type = 'ctypes.c_int'
+    fnc_args = ''
     call_native_func(SCREEN_SHOT, fnc_type, fnc_args)
 
 

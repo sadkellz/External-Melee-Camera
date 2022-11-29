@@ -18,10 +18,10 @@ This tool primarily focuses on camera functions, but is able to load states, pla
 
 ### Dependencies
 
-* Pymem
+* [Pymem](https://pymem.readthedocs.io/en/latest/)
 
 ### Installing
-
+#### 
 
 ### Executing program
 
