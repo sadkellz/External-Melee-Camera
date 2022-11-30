@@ -33,20 +33,20 @@ Click open, and locate [_install_pymem.py_]()
 
 Once opened, run the script.
 
-![](imgs/Scripting_Menu 3.png)
+![](imgs/Scripting_Menu_3.png)
 ###
 #### External Melee Camera
 Navigate to your Blender preferences by going to _'Edit > Preferences'_
 
-![](imgs/Preferences Menu.png)
+![](imgs/Preferences_Menu.png)
 
 Head to the _'Add-ons'_ tab and click _'Install...'_
 
-![](imgs/Install Addon.png)
+![](imgs/Install_Addon.png)
 
 Locate _External-Melee-Camera.zip_ and click _Install Add-on_
 
-![](imgs/Install Addon 2.png)
+![](imgs/Install_Addon_2.png)
 
 #### 
 
