@@ -29,7 +29,7 @@ To install **Pymem**, open Blender and navigate to the scripting menu.
 
 Click open, and locate [_install_pymem.py_]()
 
-![](imgs/Scripting_Menu 2.png)
+![](imgs/Scripting_Menu_2.png)
 
 Once opened, run the script.
 
