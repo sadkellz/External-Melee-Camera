@@ -47,7 +47,8 @@ This tool primarily focuses on camera functions, but is able to load states, pla
 > 
 >![](imgs/Install_Addon_2.png)
 
-#### 
+#
+#
 
 > ### Using the panel
 > #### _NOTE: Dolphin must be running for the panel to appear!_
@@ -55,22 +56,22 @@ This tool primarily focuses on camera functions, but is able to load states, pla
 > 
 > > ###### Sync Camera
 > > 
-> > > This will start overwriting Melee's camera. To stop, press _'Q'_.
+> > This will start overwriting Melee's camera. To stop, press _'Q'_.
 > 
 > > ###### Save State
 > > 
-> > > This creates a Dolphin save state. Will overwrite the oldest state.
+> > This creates a Dolphin save state. Will overwrite the oldest state.
 > > ###### Load State
 > > 
-> > > Loads the last saved state.
+> > Loads the last saved state.
 > >
 > 
 > > ###### Image Sequence
 > > 
-> > > Loads the last state saved, and starts saving screenshots in Dolphin for the duration of Blenders frame range.
+> > Loads the last state saved, and starts saving screenshots in Dolphin for the duration of Blenders frame range.
 > > ###### Preview Sequence
 > > 
-> > > Will attempt to preview a sequence by loading the last state saved, and stepping through the frame range of Blender.
+> > Will attempt to preview a sequence by loading the last state saved, and stepping through the frame range of Blender.
 
 
 ## Contact
