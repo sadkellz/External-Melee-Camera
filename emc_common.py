@@ -1,3 +1,4 @@
+import bpy
 import pymem
 from pymem.ptypes import RemotePointer
 from pathlib import Path

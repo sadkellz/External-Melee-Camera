@@ -8,7 +8,7 @@ class controlProperties(PropertyGroup):
 
     is_paused: BoolProperty(
         name="Frame Advance",
-        description="Change operation of Img Seq if Melee is paused/un-paused.",
+        description="Change operations of img seq if Melee is paused/un-paused.",
         default=False
         )
 

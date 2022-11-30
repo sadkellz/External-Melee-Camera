@@ -1,4 +1,3 @@
-
 <br />
 <div align="center">
   <a href="https://github.com/sadkellz/External-Melee-Camera/">
@@ -10,58 +9,55 @@
 
 ## Description
 
-A Blender add-on that integrates the ability to control various Melee and Dolphin functions from within Blender.
+**EMC** is a Blender add-on that integrates the ability to control various Melee and Dolphin functions from within Blender.
 
 
 This tool primarily focuses on camera functions, but is able to load states, play/pause, and create image sequences as well.
 ## Getting Started
 
-### Dependencies
+### Requirements
 
 * [Pymem](https://pymem.readthedocs.io/en/latest/)
+* [Blender 3.1+](https://www.blender.org/download/) - Not tested on earlier versions.
+* [Slippi](https://slippi.gg/)
 
-### Installing
+### Installing the Add-on
+#### Pymem
+To install **Pymem**, open Blender and navigate to the scripting menu.
+
+![](imgs/Scripting_Menu.png)
+
+Click open, and locate [_install_pymem.py_]()
+
+![](imgs/Scripting_Menu 2.png)
+
+Once opened, run the script.
+
+![](imgs/Scripting_Menu 3.png)
+###
+#### External Melee Camera
+Navigate to your Blender preferences by going to _'Edit > Preferences'_
+
+![](imgs/Preferences Menu.png)
+
+Head to the _'Add-ons'_ tab and click _'Install...'_
+
+![](imgs/Install Addon.png)
+
+Locate _External-Melee-Camera.zip_ and click _Install Add-on_
+
+![](imgs/Install Addon 2.png)
+
 #### 
 
-### Executing program
+### Using the panel
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
-
-## Help
-
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
 
 ## Authors
-
-Contributors names and contact info
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
-
-## Version History
-
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
+[KELLZ](https://twitter.com/sadkellz)
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the GPL 3.0 License - see the LICENSE.md file for details
 
 ## Acknowledgments
-
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)

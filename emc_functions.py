@@ -5,6 +5,7 @@ from . emc_common import *
 
 
 # Injects a python interpreter, so we can call functions from Dolphins main thread via offset
+# Reusable shellcode using fstring formats
 def call_native_func(fnc_ptr, fnc_type, fnc_args):
     pm.inject_python_interpreter()
     fnc_adr = '0x' + format((pm.base_address + fnc_ptr), "08X")
@@ -76,7 +77,7 @@ def sync_blender_cam(addr):
     pm.write_bytes(addr, mat_bytes, len(mat_bytes))
 
 
-def sync_blender_cam_freelook():
+'''def sync_blender_cam_freelook():
     # viewrotation
     # inv_viewrotation
     # translation_vector
@@ -110,6 +111,7 @@ def sync_blender_cam_freelook_r():
     addr = 0x0000000003C5F470
     buf = mat_bytes
     pm.write_bytes(addr, buf, len(buf))
+'''
 
 
 def sync_player_control(addr):
