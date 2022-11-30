@@ -1,9 +1,8 @@
 import bpy
 import pymem
 from pymem.ptypes import RemotePointer
-from pathlib import Path
 
-ROOT_DIRECTORY = Path('C://Users//fores//AppData//Roaming//Slippi Launcher//playback//User//ScreenShots//GALE01')
+# ROOT_DIRECTORY = Path('C://Users//fores//AppData//Roaming//Slippi Launcher//playback//User//ScreenShots//GALE01')
 pm = pymem.Pymem("Slippi Dolphin.exe")
 index_ptr = 0x01CF0088
 
@@ -25,7 +24,8 @@ SAVE_STATE = 0x8F5E00
 LOAD_STATE = 0x8F53F0
 SCREEN_SHOT = 0x885BA0
 FRAME_STEP = 0x1F8AC0
-FREE_LOOK = None
+# Dolphin freelook
+#FREE_LOOK = None
 
 CAM_START = 0x453040
 PAUSE_BIT = 0x479D68

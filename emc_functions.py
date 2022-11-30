@@ -16,6 +16,7 @@ func({})""".format(fnc_type, fnc_adr, fnc_args)
     pm.inject_python_shellcode(shell_code)
 
 
+# Finds the specific page with the size of EMU_SIZE.
 def pattern_scan_all(handle, pattern, *, return_multiple=False):
     next_region = 0
     found = []
@@ -42,6 +43,8 @@ def pattern_scan_all(handle, pattern, *, return_multiple=False):
     return found
 
 
+# Finds 'GALE01' in memory.
+# This is used to jump to specific functions in Melee ie: GALE01 + CAM_START
 def find_emu_mem():
     handle = pm.process_handle
     byte_pattern = bytes.fromhex("47 41 4C 45 30 31 00 02")
@@ -76,7 +79,12 @@ def sync_blender_cam(addr):
     mat_bytes += struct.pack(">f", fov)
     pm.write_bytes(addr, mat_bytes, len(mat_bytes))
 
-
+# This is an artifact of previous revisions where it used Dolphins freelook matrix instead of Melee's camera.
+# In Melee, characters will get culled if past the cameras view. Because of this, characters in freelook could
+# seemingly disappear if this culling occurs.
+#
+# The downside of this, is losing the ability to roll the camera. Melee's camera is restricted to an orbit view setup,
+# with no roll.
 '''def sync_blender_cam_freelook():
     # viewrotation
     # inv_viewrotation

@@ -11,8 +11,9 @@
 
 **EMC** is a Blender add-on that integrates the ability to control various Melee and Dolphin functions from within Blender.
 
-
 This tool primarily focuses on camera functions, but is able to load states, play/pause, and create image sequences as well.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C5FL4PH)
 ## Getting Started
 
 >### Requirements
@@ -48,37 +49,42 @@ This tool primarily focuses on camera functions, but is able to load states, pla
 >![](imgs/Install_Addon_2.png)
 
 #
-#
 
-> ### Using the panel
+> ### Scene Setup
+> To get started, open the provided [EMC_Stages.blend]() file. This Blender scene contains all of the legal stages
+> in their own collections, to be used as reference when creating a camera animation.
 > #### _NOTE: Dolphin must be running for the panel to appear!_
 > ![](imgs/Panel.png)
 > 
-> > ###### Sync Camera
+> > ##### Sync Camera
 > > 
 > > This will start overwriting Melee's camera. To stop, press _'Q'_.
 > 
-> > ###### Save State
+> > ##### Save State
 > > 
 > > This creates a Dolphin save state. Will overwrite the oldest state.
-> > ###### Load State
+> 
+> > ##### Load State
 > > 
 > > Loads the last saved state.
 > >
 > 
-> > ###### Image Sequence
+> > ##### Image Sequence
 > > 
 > > Loads the last state saved, and starts saving screenshots in Dolphin for the duration of Blenders frame range.
-> > ###### Preview Sequence
+> 
+> > ##### Preview Sequence
 > > 
 > > Will attempt to preview a sequence by loading the last state saved, and stepping through the frame range of Blender.
 
+#
 
 ## Contact
-[KELLZ](https://twitter.com/sadkellz)
+[Twitter](https://twitter.com/sadkellz)
 
 ## License
 
 This project is licensed under the GPL 3.0 License - see the LICENSE.md file for details
 
 ## Acknowledgments
+[Dolphin Freelook Manipulator For Blender 2.8](https://github.com/John10v10/-Useless-DolphinToolForBlender)

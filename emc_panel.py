@@ -2,13 +2,14 @@ from bpy.props import (EnumProperty, BoolProperty, PointerProperty,)
 from bpy.types import (Panel, PropertyGroup)
 from . emc_functions import *
 from . emc_op import *
+from pathlib import PureWindowsPath
 
 
 class controlProperties(PropertyGroup):
 
     is_paused: BoolProperty(
         name="Frame Advance",
-        description="Change operations of img seq if Melee is paused/un-paused.",
+        description="Change operations of image seq if Melee is dev paused/un-paused.",
         default=False
         )
 
@@ -21,7 +22,7 @@ class controlProperties(PropertyGroup):
 
 class emcControlPanel(Panel):
     bl_label = "External Melee Camera"
-    bl_idname = "OBJECT_PT_dolphinfreelook"
+    bl_idname = "OBJECT_PT_external_melee_camera"
     bl_space_type = "VIEW_3D"   
     bl_region_type = "UI"
     bl_category = "Melee Control Panel"
@@ -35,7 +36,6 @@ class emcControlPanel(Panel):
         layout = self.layout
         wm = context.window_manager
         mytool = context.scene.my_tool
-
         layout.operator("wm.sync_cam")
         layout.separator()
         layout.operator('wm.save_state')
@@ -46,7 +46,11 @@ class emcControlPanel(Panel):
         layout.prop(mytool, "is_paused")
         layout.prop(mytool, "is_media_sync")
         layout.separator()
+        layout.row().label(text="Slippi Directory: ")
+        layout.row().prop(context.scene, "EMC_root_directory")
 
+
+ROOT_DIRECTORY = PureWindowsPath(EMC_root_directory)
 
 classes = (
     controlProperties,

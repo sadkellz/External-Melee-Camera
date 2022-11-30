@@ -1,6 +1,7 @@
 import time
 from . emc_functions import *
 from . emc_common import *
+from . emc_panel import ROOT_DIRECTORY
 
 GALE01 = find_emu_mem()
 
@@ -18,8 +19,6 @@ class syncCamera(bpy.types.Operator):
 
         if event.type == 'TIMER':
             sync_blender_cam((GALE01 + CAM_START))
-            # sync_blender_cam_freelook()
-            # sync_blender_cam_freelook_r()
             if context.scene.my_tool.is_media_sync:
                 sync_player_control((GALE01 + PAUSE_BIT))
         return {'PASS_THROUGH'}

@@ -5,7 +5,7 @@ from . emc_functions import *
 bl_info = {
     "name": "External-Melee-Camera",
     "author": "KELLZ",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "blender": (3, 2, 2),
     "warning": "Requires installation of dependencies",
     "category": "Tools",
