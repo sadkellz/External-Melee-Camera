@@ -1,11 +1,11 @@
 import bpy
-from . emc_panel import *
-from . emc_functions import *
+from emc_panel import classes
+from bpy.utils import unregister_class
 
 bl_info = {
     "name": "External-Melee-Camera",
     "author": "KELLZ",
-    "version": (1, 3, 0),
+    "version": (1, 5, 0),
     "blender": (3, 2, 2),
     "warning": "Requires installation of dependencies",
     "category": "Tools",
@@ -22,7 +22,6 @@ def register():
 
 
 def unregister():
-    from bpy.utils import unregister_class
     for cls in reversed(classes):
         unregister_class(cls)
     del bpy.types.Scene.my_tool

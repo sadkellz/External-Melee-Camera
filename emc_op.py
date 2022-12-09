@@ -1,8 +1,9 @@
+import bpy
 import time
-from . emc_functions import *
-from . emc_common import *
-from . emc_panel import ROOT_DIRECTORY
-
+from pathlib import Path
+from emc_common import CAM_START, PAUSE_BIT
+from emc_function import find_emu_mem, sync_blender_cam, sync_player_control,\
+    take_screenshot, frame_step, load_state, save_state
 GALE01 = find_emu_mem()
 
 
@@ -34,25 +35,25 @@ class syncCamera(bpy.types.Operator):
         wm.event_timer_remove(self._timer)
 
 
-def wait_for_screenshot():
+def wait_for_screenshot(root_dir):
     while True:
-        size = sum(f.stat().st_size for f in ROOT_DIRECTORY.glob('**/*') if f.is_file())
+        size = sum(f.stat().st_size for f in root_dir.glob('**/*') if f.is_file())
         time.sleep(0.5)
-        size2 = sum(f.stat().st_size for f in ROOT_DIRECTORY.glob('**/*') if f.is_file())
+        size2 = sum(f.stat().st_size for f in root_dir.glob('**/*') if f.is_file())
         if size == size2:
             time.sleep(0.1)
             break
 
 
-def img_seq(context):
+def img_seq(context, root_dir):
     take_screenshot()
     # in-game paused camera sequence vs paused
     if context.scene.my_tool.is_paused:
         frame_step()
-        wait_for_screenshot()
+        wait_for_screenshot(root_dir)
         bpy.ops.screen.frame_offset(delta=1)
     else:
-        wait_for_screenshot()
+        wait_for_screenshot(root_dir)
         bpy.ops.screen.frame_offset(delta=1)
 
 
@@ -70,14 +71,15 @@ class screenshotSequence(bpy.types.Operator):
 
     def modal(self, context, event):
         scene = context.scene
+        root_dir = Path(scene.my_tool.slippi_path)
         if event.type in {'SPACE'} or scene.frame_current > scene.frame_end - 1:
             self.cancel(context)
             return {'CANCELLED'}
 
         if event.type == 'TIMER':
-            img_seq(context)
+            img_seq(context, root_dir)
             bpy.context.view_layer.update()
-            time.sleep(0.1)
+            time.sleep(0.7)
         return {'PASS_THROUGH'}
 
     def execute(self, context):

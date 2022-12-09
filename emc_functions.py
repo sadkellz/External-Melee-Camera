@@ -1,7 +1,8 @@
 import bpy
 import math
 import struct
-from . emc_common import *
+import pymem
+from emc_common import pm, EMU_SIZE, SAVE_STATE, LOAD_STATE, SCREEN_SHOT, FRAME_STEP
 
 
 # Injects a python interpreter, so we can call functions from Dolphins main thread via offset
@@ -78,6 +79,7 @@ def sync_blender_cam(addr):
     # Add fov data to the end of camera data.
     mat_bytes += struct.pack(">f", fov)
     pm.write_bytes(addr, mat_bytes, len(mat_bytes))
+
 
 # This is an artifact of previous revisions where it used Dolphins freelook matrix instead of Melee's camera.
 # In Melee, characters will get culled if past the cameras view. Because of this, characters in freelook could
