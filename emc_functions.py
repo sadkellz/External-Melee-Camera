@@ -2,7 +2,7 @@ import bpy
 import math
 import struct
 import pymem
-from emc_common import pm, EMU_SIZE, SAVE_STATE, LOAD_STATE, SCREEN_SHOT, FRAME_STEP
+from .emc_common import pm, GALE01, SAVE_STATE, LOAD_STATE, SCREEN_SHOT, FRAME_STEP, CAM_TYPE
 
 
 # Injects a python interpreter, so we can call functions from Dolphins main thread via offset
@@ -17,40 +17,10 @@ func({})""".format(fnc_type, fnc_adr, fnc_args)
     pm.inject_python_shellcode(shell_code)
 
 
-# Finds the specific page with the size of EMU_SIZE.
-def pattern_scan_all(handle, pattern, *, return_multiple=False):
-    next_region = 0
-    found = []
-
-    while next_region < 0x7FFFFFFF0000:
-        next_region, page_found = pymem.pattern.scan_pattern_page(
-            handle,
-            next_region,
-            pattern,
-            return_multiple=return_multiple
-        )
-
-        if not return_multiple and page_found:
-            if (next_region - page_found) == int(EMU_SIZE):
-                return page_found
-
-        if page_found:
-            if (next_region - page_found) == int(EMU_SIZE):
-                found += page_found
-
-    if not return_multiple:
-        return None
-
-    return found
-
-
-# Finds 'GALE01' in memory.
-# This is used to jump to specific functions in Melee ie: GALE01 + CAM_START
-def find_emu_mem():
-    handle = pm.process_handle
-    byte_pattern = bytes.fromhex("47 41 4C 45 30 31 00 02")
-    found = pattern_scan_all(handle, byte_pattern)
-    return found
+def check_cam_type():
+    current_type = pm.read_int(GALE01 + CAM_TYPE)
+    if current_type != int(8):
+        pm.write_int(GALE01 + CAM_TYPE, 8)
 
 
 def sync_blender_cam(addr):
@@ -75,7 +45,8 @@ def sync_blender_cam(addr):
     for r in loc_data:
         for c in r:
             mat_bytes += struct.pack(">f", c)
-
+    # Check if camera type is 'Dev'
+    check_cam_type()
     # Add fov data to the end of camera data.
     mat_bytes += struct.pack(">f", fov)
     pm.write_bytes(addr, mat_bytes, len(mat_bytes))
@@ -159,3 +130,4 @@ def frame_step():
     fnc_type = 'ctypes.c_int'
     fnc_args = ''
     call_native_func(FRAME_STEP, fnc_type, fnc_args)
+

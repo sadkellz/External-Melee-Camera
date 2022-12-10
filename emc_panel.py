@@ -1,6 +1,6 @@
 from bpy.props import (StringProperty, BoolProperty, PointerProperty)
 from bpy.types import (Panel, PropertyGroup)
-from emc_op import syncCamera, menuSavestate, menuLoadstate, screenshotSequence, menuPreview
+from .emc_op import syncCamera, menuSavestate, menuLoadstate, screenshotSequence, menuPreview
 
 
 class controlProperties(PropertyGroup):
@@ -64,3 +64,4 @@ classes = (
     screenshotSequence,
     menuPreview,
     )
+

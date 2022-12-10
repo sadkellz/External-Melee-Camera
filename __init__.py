@@ -1,5 +1,5 @@
 import bpy
-from emc_panel import classes, PointerProperty, controlProperties
+from .emc_panel import classes, PointerProperty, controlProperties
 from bpy.utils import register_class, unregister_class
 
 bl_info = {
@@ -28,3 +28,4 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+

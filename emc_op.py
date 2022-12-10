@@ -1,10 +1,9 @@
 import bpy
 import time
 from pathlib import Path
-from emc_common import CAM_START, PAUSE_BIT
-from emc_function import find_emu_mem, sync_blender_cam, sync_player_control,\
+from .emc_common import GALE01, CAM_START, PAUSE_BIT, CAM_TYPE
+from .emc_functions import sync_blender_cam, sync_player_control,\
     take_screenshot, frame_step, load_state, save_state
-GALE01 = find_emu_mem()
 
 
 class syncCamera(bpy.types.Operator):
@@ -147,3 +146,4 @@ class menuPreview(bpy.types.Operator):
     def cancel(self, context):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
+
