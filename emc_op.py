@@ -1,5 +1,6 @@
 import bpy
 import time
+import os
 from pathlib import Path
 from .emc_common import GALE01, CAM_START, PAUSE_BIT, CAM_TYPE
 from .emc_functions import sync_blender_cam, sync_player_control,\
@@ -44,16 +45,12 @@ def wait_for_screenshot(root_dir):
             break
 
 
+
 def img_seq(context, root_dir):
     take_screenshot()
-    # in-game paused camera sequence vs paused
-    if context.scene.my_tool.is_paused:
-        frame_step()
-        wait_for_screenshot(root_dir)
-        bpy.ops.screen.frame_offset(delta=1)
-    else:
-        wait_for_screenshot(root_dir)
-        bpy.ops.screen.frame_offset(delta=1)
+    frame_step()
+    wait_for_screenshot(root_dir)
+    bpy.ops.screen.frame_offset(delta=1)
 
 
 def prev_seq(context):
@@ -146,4 +143,3 @@ class menuPreview(bpy.types.Operator):
     def cancel(self, context):
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
-

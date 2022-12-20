@@ -2,7 +2,8 @@ import bpy
 import math
 import struct
 import pymem
-from .emc_common import pm, GALE01, SAVE_STATE, LOAD_STATE, SCREEN_SHOT, FRAME_STEP, CAM_TYPE
+from .emc_common import pm, get_ptr, GALE01, SAVE_STATE, \
+    LOAD_STATE, SCREEN_SHOT, FRAME_STEP, CAM_TYPE
 
 
 # Injects a python interpreter, so we can call functions from Dolphins main thread via offset
@@ -130,4 +131,3 @@ def frame_step():
     fnc_type = 'ctypes.c_int'
     fnc_args = ''
     call_native_func(FRAME_STEP, fnc_type, fnc_args)
-

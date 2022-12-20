@@ -9,9 +9,10 @@
 
 ## Description
 
-**EMC** is a Blender add-on that integrates the ability to control various Melee and Dolphin functions from within Blender.
-
+**EMC** is a Blender add-on that integrates the ability to control various Melee and Dolphin functions from within Blender.  
 This tool primarily focuses on camera functions, but is able to load states, play/pause, and create image sequences as well.
+
+Consider supporting me on Ko-fi, this project took a lot of time and effort and I would appreciate the tips!
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C5FL4PH)
 ## Getting Started
@@ -50,15 +51,17 @@ This tool primarily focuses on camera functions, but is able to load states, pla
 
 #
 
-> ### Scene Setup
-> To get started, open the provided [EMC_Stages.blend]() file. This Blender scene contains all of the legal stages
+## Scene Setup
+> ### Blender File
+> To get started, open the provided [emc_stages.blend]() file. This Blender scene contains all of the legal stages
 > in their own collections, to be used as reference when creating a camera animation.
 > #### _NOTE: Dolphin must be running for the panel to appear!_
 > ![](imgs/Panel.png)
 > 
+> ### Descriptions
 > > ##### Sync Camera
 > > 
-> > This will start overwriting Melee's camera. To stop, press _'Q'_.
+> > This will start controlling Melee's camera from Blender. To stop, press _'Q'_.
 > 
 > > ##### Save State
 > > 
@@ -72,12 +75,13 @@ This tool primarily focuses on camera functions, but is able to load states, pla
 > > ##### Image Sequence
 > > 
 > > Loads the last state saved, and starts saving screenshots in Dolphin for the duration of Blenders frame range.
+> > These images can be found at  
+> > `C:\Users\*your name*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`
 > 
 > > ##### Preview Sequence
 > > 
 > > Will attempt to preview a sequence by loading the last state saved, and stepping through the frame range of Blender.
 
-#
 
 ## Contact
 [Twitter](https://twitter.com/sadkellz)
@@ -87,4 +91,7 @@ This tool primarily focuses on camera functions, but is able to load states, pla
 This project is licensed under the GPL 3.0 License - see the LICENSE.md file for details
 
 ## Acknowledgments
+[Slippi](https://slippi.gg/)
+
 [Dolphin Freelook Manipulator For Blender 2.8](https://github.com/John10v10/-Useless-DolphinToolForBlender)
+

@@ -5,12 +5,6 @@ from .emc_op import syncCamera, menuSavestate, menuLoadstate, screenshotSequence
 
 class controlProperties(PropertyGroup):
 
-    is_paused: BoolProperty(
-        name="Frame Advance",
-        description="Change operations of image seq if Melee is dev paused/un-paused.",
-        default=False
-        )
-
     is_media_sync: BoolProperty(
         name="Sync Media Controls",
         description="",
@@ -48,7 +42,6 @@ class emcControlPanel(Panel):
         layout.separator()
         layout.operator("wm.ss_seq")
         layout.operator("wm.prev_seq")
-        layout.prop(mytool, "is_paused")
         layout.prop(mytool, "is_media_sync")
         layout.separator()
         layout.prop(mytool, "slippi_path")
@@ -64,4 +57,3 @@ classes = (
     screenshotSequence,
     menuPreview,
     )
-
