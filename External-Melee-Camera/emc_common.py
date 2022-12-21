@@ -18,11 +18,10 @@ def get_ptr(base, offsets):
 FRAME_INDEX = get_ptr(pm.base_address + INDEX_PTR, [0xC])
 EMU_SIZE = 0x2000000
 EMU_DIST = 0x10000
-SAVE_STATE = 0x8F5E00
-LOAD_STATE = 0x8F53F0
-SCREEN_SHOT = 0x885BA0
-FRAME_STEP = 0x1F8AC0
-# Dolphin freelook
+SAVE_STATE_PAT = b'...\x5C\x24\x10\x55\x48\x8B\xEC\x48\x83\xEC\x50\x48\x8D\x4D\xE0'
+LOAD_STATE_PAT = b'...\x5C\x24\x08\x57\x48\x83\xEC\x70\x48\x8B\x05....\x48\x33\xC4\x48\x89\x44.\x60\x8B\xD9\x48\x8D\x4C.\x30\xE8....'
+SCREEN_SHOT_PAT = b'\x40\x53\x48\x83\xEC\x50\x48\x8B\x05....\x48\x33\xC4\x48\x89\x44.\x40\x48\x8B\x05....'
+FRAME_STEP_PAT = b'..\x5C\x24\x08\x57\x48\x83\xEC\x20\x48\x8B\xF9\xE8....\x83\xF8\x01\x0F\x94\xC3\xE8....\xE8....'
 # FREE_LOOK = None
 CAM_START = 0x453040
 PAUSE_BIT = 0x479D68
@@ -65,4 +64,15 @@ def find_gale01():
     return found
 
 
+def find_dolphin_funcs(byte_pattern):
+    handle = pm.process_handle
+    module = pymem.process.module_from_name(pm.process_handle, "Slippi Dolphin.exe")
+    found = pymem.pattern.pattern_scan_module(handle, module, byte_pattern, return_multiple=False)
+    return found
+
+
+SAVE_STATE = find_dolphin_funcs(SAVE_STATE_PAT) - pm.base_address
+LOAD_STATE = find_dolphin_funcs(LOAD_STATE_PAT) - pm.base_address
+SCREEN_SHOT = find_dolphin_funcs(SCREEN_SHOT_PAT) - pm.base_address
+FRAME_STEP = find_dolphin_funcs(FRAME_STEP_PAT) - pm.base_address
 GALE01 = find_gale01()
