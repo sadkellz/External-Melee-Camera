@@ -21,7 +21,7 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 >### Requirements
 >* [Pymem](https://pymem.readthedocs.io/en/latest/)
 >* [Blender 3.1+](https://www.blender.org/download/) - Not tested on earlier versions.
->* [Slippi](https://slippi.gg/)
+>* [Slippi Launcher 2.7+](https://slippi.gg/)
 
 ## Installing the Add-on
 >### Pymem
@@ -29,7 +29,7 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 >
 >![](imgs/Scripting_Menu.png)
 >
->Click open, and locate [_install_pymem.py_]()
+>Click open, and locate [_install_pymem.py_](https://github.com/sadkellz/External-Melee-Camera/blob/main/resources/install_pymem.py)
 >
 >![](imgs/Scripting_Menu_2.png)
 >
@@ -54,7 +54,7 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 
 ## Scene Setup
 > ### Blender File
-> To get started, open the provided [emc_stages.blend]() file. This Blender scene contains all of the legal stages
+> To get started, open the provided [emc_stages.blend](https://github.com/sadkellz/External-Melee-Camera/blob/main/resources/emc_stages.blend) file. This Blender scene contains all of the legal stages
 > in their own collections, to be used as reference when creating a camera animation.
 > #### _NOTE: Dolphin must be running for the panel to appear!_
 > ![](imgs/Panel.png)
@@ -100,7 +100,10 @@ Discord: KELLZ#0001
 This project is licensed under the GPL 3.0 License - see the [LICENSE.md]() file for details
 
 ## Acknowledgments
-[Slippi](https://slippi.gg/)
+[Slippi](https://slippi.gg/)  
+- Without Slippi and its replay capabilities, this add-on wouldn't be nearly as powerful.  
 
 [Dolphin Freelook Manipulator For Blender 2.8](https://github.com/John10v10/-Useless-DolphinToolForBlender)
+- The project that made me realize this was even possible.  
 
+Thanks to Whisk, Solanum, Mike, and Josh for helping me a long the way.
