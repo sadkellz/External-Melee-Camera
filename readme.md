@@ -9,8 +9,9 @@
 
 ## Description
 
-**EMC** is a Blender add-on that integrates the ability to control various Melee and Dolphin functions from within Blender.  
-This tool primarily focuses on camera functions, but is able to load states, play/pause, and create image sequences as well.
+**EMC** is a Blender add-on that enables you to control various functions in Super Smash Bros. Melee and Dolphin directly from Blender. 
+
+It mainly focuses on camera controls, but it also allows you to load states, toggle play/pause, and generate image sequences.
 
 Consider supporting me on Ko-fi, this project took a lot of time and effort and I would appreciate the tips!
 
@@ -61,7 +62,7 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 > ### Descriptions
 > > ##### Sync Camera
 > > 
-> > This will start controlling Melee's camera from Blender. To stop, press _'Q'_.
+> > This feature allows you to control the camera in Super Smash Bros. Melee using Blender. Press _'Q'_ to disable camera control.
 > 
 > > ##### Save State
 > > 
@@ -80,12 +81,20 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 > 
 > > ##### Preview Sequence
 > > 
-> > Will attempt to preview a sequence by loading the last state saved, and stepping through the frame range of Blender.
-
+> > Will attempt to preview a sequence by loading the last state saved, and steps through the frame range of Blender.
+>
+> > ##### Sync Media Controls
+> > This function will toggle the play/pause state of Melee in sync with Blender's play/pause state.
+> 
+> > ##### Screenshot Directory
+> > 
+> > This is where you set the directory of where Dolphin saves screenshots to.
+> > `C:\Users\*your name*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`
+>
 
 ## Contact
-[Twitter](https://twitter.com/sadkellz)
-
+[Twitter](https://twitter.com/sadkellz)  
+Discord: KELLZ#0001
 ## License
 
 This project is licensed under the GPL 3.0 License - see the LICENSE.md file for details
