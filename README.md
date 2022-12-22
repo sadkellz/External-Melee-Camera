@@ -103,4 +103,4 @@ This project is licensed under the GPL 3.0 License - see the [LICENSE.md](https:
 [Dolphin Freelook Manipulator For Blender 2.8](https://github.com/John10v10/-Useless-DolphinToolForBlender)
 - The project that made me realize this was even possible.  
 
-Thanks to Whisk, Solanum, Mike, and Josh for helping me a long the way.
+Thanks to [Whisk](https://github.com/jamesprayner), Solanum, Mike, and Josh for helping me a long the way.
