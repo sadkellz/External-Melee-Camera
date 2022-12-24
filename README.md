@@ -73,7 +73,7 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 > > Loads the last saved state.
 > 
 > > ##### Image Sequence
-> > Loads the last state saved, and starts saving screenshots in Dolphin for the duration of Blenders frame range.  
+> > Loads the last state saved, and starts capturing screenshots in Dolphin for the duration of Blenders frame range.  
 > > Press _**spacebar**_ to cancel.   
 > > **_Note: Screenshot Directory must be set for this feature to work properly._**
 > 
@@ -88,30 +88,29 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 > > `C:\Users\*your name*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`
 
 ## Known Issues
-> ### ModuleNotFoundError: No module named 'pymem'
-> This error occurs if Pymem was not properly installed, or wasn't able to.
-> + Try running Blender as administrator, then retry installing Pymem.
-> + Download a portable version of Blender 2.9.3, then retry installing Pymem.  
-> [Direct Download](https://www.blender.org/download/release/Blender2.93/blender-2.93.13-windows-x64.zip)
-###
-> ### MemoryReadError: Could not read memory at: x, length: x
-> This error occurs if Dolphin was closed and re-opened.
-> + Try restarting Blender. Remember to save your work!
-> + Make sure that Dolphin is currently in game, or is playing a replay.
+### ModuleNotFoundError: No module named 'pymem'
+This error occurs if Pymem was not properly installed, or wasn't able to.
++ Try running Blender as administrator, then retry installing Pymem.
++ Download a portable version of Blender 2.9.3, then retry installing Pymem.  
+[Direct Download](https://www.blender.org/download/release/Blender2.93/blender-2.93.13-windows-x64.zip)
 
-> ### ProcessNotFound: Could not find process: Slippi Dolphin.exe
-> This error occurs if Dolphin is not currently running, or is named something other than `Slippi Dolphin.exe`.
->+ Make sure a Dolphin is running, and a game or replay is currently running.
->+ If Dolphin is in fact running, try renaming the executable to `Slippi Dolphin.exe`.
+### MemoryReadError: Could not read memory at: x, length: x
+This error occurs if Dolphin was closed and re-opened.
++ Try restarting Blender. Remember to save your work!
++ Make sure that Dolphin is currently in game, or is playing a replay.
 
-> ### My image sequence has a black frame
-> This happens when an image sequence is started, as it takes a screenshot when it loads a state.
-> + Workaround this by assuming the frame you saved a state on will be black.
+### ProcessNotFound: Could not find process: Slippi Dolphin.exe
+This error occurs if Dolphin is not currently running, or is named something other than `Slippi Dolphin.exe`.
++ Make sure a Dolphin is running, and a game or replay is currently running.
++ If Dolphin is in fact running, try renaming the executable to `Slippi Dolphin.exe`.
 
-> ### The image sequence skipped/didn't capture every frame
-> This happens if the `Screenshot Directory` wasn't set properly.
-> + Double-check the directory is set to `C:\Users\*user*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`.
+### My image sequence has a black frame
+This happens when an image sequence is started, as it takes a screenshot when it loads a state.
++ Workaround this by assuming the frame you saved a state on will be black.
 
+### The image sequence skipped/didn't capture every frame
+This happens if the `Screenshot Directory` wasn't set properly.
++ Double-check that the directory is set to `C:\Users\*user*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`.
 
 ## Contact
 Any questions or trouble? Get in touch.  
