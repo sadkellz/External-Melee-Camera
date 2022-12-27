@@ -17,19 +17,24 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C5FL4PH)
 ## Getting Started
-
 >### Requirements
->* [Pymem](https://pymem.readthedocs.io/en/latest/)
->* [Blender 2.9.3 LTS](https://www.blender.org/download/lts/2-93/) - Later versions have breaking Python changes.
->* [Slippi Launcher 2.7+](https://slippi.gg/)
+> * Windows 10
+> * [Pymem](https://pymem.readthedocs.io/en/latest/)
+> * [Blender 2.9.3 LTS](https://www.blender.org/download/lts/2-93/) - Later versions have breaking Python changes.  
+> _NOTE: It is highly recommended to use a **portable** version._
+> * [Slippi Launcher 2.7+](https://slippi.gg/)
 
 ## Installing the Add-on
+Download the latest version of **EMC** from the 
+[release](https://github.com/sadkellz/External-Melee-Camera/releases)
+page and download the latest version.
+
 >### Pymem
 >To install **Pymem**, run Blender as **administrator** and navigate to the scripting menu.
 >
 >![](imgs/Scripting_Menu.png)
 >
->Click open, and locate [_install_pymem.py_](https://github.com/sadkellz/External-Melee-Camera/blob/main/resources/install_pymem.py)
+>Click open, and locate [_install_pymem.py_](resources/install_pymem.py)
 >
 >![](imgs/Scripting_Menu_2.png)
 >
@@ -52,7 +57,7 @@ Consider supporting me on Ko-fi, this project took a lot of time and effort and 
 
 ## Scene Setup
 > ### Blender File
-> To get started, open the provided [emc_stages.blend](https://github.com/sadkellz/External-Melee-Camera/blob/main/resources/emc_stages.blend) file. This Blender scene contains all of the legal stages
+> To get started, open the provided [emc_stages.blend](resources/emc_stages.blend) file. This Blender scene contains all the legal stages
 > in their own collections, to be used as reference when creating a camera animation.
 > 
 > ### Control Panel
@@ -98,6 +103,7 @@ This error occurs if Pymem was not properly installed, or wasn't able to.
 This error occurs if Dolphin was closed and re-opened.
 + Try restarting Blender. Remember to save your work!
 + Make sure that Dolphin is currently in game, or is playing a replay.
++ Try running Blender as administrator.
 
 ### ProcessNotFound: Could not find process: Slippi Dolphin.exe
 This error occurs if Dolphin is not currently running, or is named something other than `Slippi Dolphin.exe`.
@@ -110,7 +116,8 @@ This happens when an image sequence is started, as it takes a screenshot when it
 
 ### The image sequence skipped/didn't capture every frame
 This happens if the `Screenshot Directory` wasn't set properly.
-+ Double-check that the directory is set to `C:\Users\*user*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`.
++ Double-check that the directory is set to  
+`C:\Users\*user*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`.
 
 ## Contact
 Any questions or trouble? Get in touch.  
@@ -119,7 +126,6 @@ Any questions or trouble? Get in touch.
 **Discord:** `KELLZ#0001`
 
 ## License
-
 This project is licensed under the GPL 3.0 License - see the [LICENSE.md](https://github.com/sadkellz/External-Melee-Camera/blob/main/LICENSE.md) file for details
 
 ## Acknowledgments
@@ -129,4 +135,5 @@ This project is licensed under the GPL 3.0 License - see the [LICENSE.md](https:
 [Dolphin Freelook Manipulator For Blender 2.8](https://github.com/John10v10/-Useless-DolphinToolForBlender)
 - The project that made me realize this was even possible.  
 
-Thanks to [Whisk](https://github.com/jamesprayner), Solanum, Mike, and Josh for helping me a long the way.
+Thanks to [Whisk](https://github.com/jamesprayner), [Solanum](https://twitter.com/SolanumCustoms), 
+Mike, and Josh for helping me a long the way.
