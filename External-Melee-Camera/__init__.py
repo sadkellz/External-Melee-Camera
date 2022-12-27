@@ -6,7 +6,7 @@ bl_info = {
     "name": "External-Melee-Camera",
     "author": "KELLZ",
     "version": (1, 6, 0),
-    "blender": (2, 9, 3),
+    "blender": (2, 93, 0),
     "warning": "Requires installation of dependencies",
     "category": "Tools",
     "description": "Control Melee's Camera from Blender.",
