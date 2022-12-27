@@ -8,20 +8,21 @@
 </div>
 
 ## Description
+**EMC** is a Blender add-on that enables you to control various functions
+in Super Smash Bros. Melee and Dolphin directly from Blender. 
 
-**EMC** is a Blender add-on that enables you to control various functions in Super Smash Bros. Melee and Dolphin directly from Blender. 
+It mainly focuses on camera controls, but it also allows you to
+load states, toggle play/pause, and generate image sequences.
 
-It mainly focuses on camera controls, but it also allows you to load states, toggle play/pause, and generate image sequences.
-
-Consider supporting me on Ko-fi, this project took a lot of time and effort and I would appreciate the tips!
+Consider supporting me on Ko-fi, this project took a lot of time
+and effort and I would appreciate the tips!
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C5FL4PH)
 ## Getting Started
 >### Requirements
 > * Windows 10
 > * [Pymem](https://pymem.readthedocs.io/en/latest/)
-> * [Blender 2.9.3 LTS](https://www.blender.org/download/lts/2-93/) - Later versions have breaking Python changes.  
-> _NOTE: It is highly recommended to use a **portable** version._
+> * [Blender 2.9.3 LTS Portable](https://www.blender.org/download/lts/2-93/) - Later versions have breaking Python changes.
 > * [Slippi Launcher 2.7+](https://slippi.gg/)
 
 ## Installing the Add-on
@@ -109,6 +110,11 @@ This error occurs if Dolphin was closed and re-opened.
 This error occurs if Dolphin is not currently running, or is named something other than `Slippi Dolphin.exe`.
 + Make sure a Dolphin is running, and a game or replay is currently running.
 + If Dolphin is in fact running, try renaming the executable to `Slippi Dolphin.exe`.
+
+### Dolphin is crashing when trying to use certain functions
++ Check if your Slippi Launcher is updated to the latest version.
++ Try running Blender as administrator.
++ Try uninstalling Slippi and remove user files, then reinstall.
 
 ### My image sequence has a black frame
 This happens when an image sequence is started, as it takes a screenshot when it loads a state.
