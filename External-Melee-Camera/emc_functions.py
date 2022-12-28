@@ -30,12 +30,12 @@ def sync_blender_cam(addr):
     cam = bpy.data.objects['Camera']
 
     # Vector translation of object world matrix, change axis of orientation.
-    org_loc = org.matrix_world.translation.yzx
-    cam_loc = cam.matrix_world.translation.yzx
-    # Negate y and x to align with melee's look at -x.
-    org_loc[0] = org_loc[0] * -1
+    org_loc = org.matrix_world.translation.xzy
+    cam_loc = cam.matrix_world.translation.xzy
+
+    org_loc[0] = org_loc[0]
     org_loc[2] = org_loc[2] * -1
-    cam_loc[0] = cam_loc[0] * -1
+    cam_loc[0] = cam_loc[0]
     cam_loc[2] = cam_loc[2] * -1
     # fov in mm, unsure of the true unit of measurement in melee.
     fov = (math.degrees(cam.data.angle))
