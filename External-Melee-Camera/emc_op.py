@@ -98,9 +98,9 @@ class screenshotSequence(bpy.types.Operator):
 
 
 class menuLoadstate(bpy.types.Operator):
-    """Loads the slot 1 save state."""
-    bl_idname = "wm.load_state"
-    bl_label = "Load State"
+    """Loads the last state saved."""
+    bl_idname = "wm.quick_load"
+    bl_label = "Quick Load"
 
     def execute(self, context):
         load_state()
@@ -108,9 +108,9 @@ class menuLoadstate(bpy.types.Operator):
 
 
 class menuSavestate(bpy.types.Operator):
-    """Saves a state to slot 1."""
-    bl_idname = "wm.save_state"
-    bl_label = "Save State"
+    """Saves to the oldest state."""
+    bl_idname = "wm.quick_save"
+    bl_label = "Quick Save"
 
     def execute(self, context):
         save_state()
@@ -118,7 +118,7 @@ class menuSavestate(bpy.types.Operator):
 
 
 class menuPreview(bpy.types.Operator):
-    """Preview frame range accurately"""
+    """Steps through the current frame range."""
     bl_idname = "wm.prev_seq"
     bl_label = "Preview Sequence"
     _timer = None
