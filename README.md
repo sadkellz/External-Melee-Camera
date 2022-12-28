@@ -125,11 +125,9 @@ This happens if the `Screenshot Directory` wasn't set properly.
 + Double-check that the directory is set to  
 `C:\Users\*user*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`.
 
-## Contact
-Any questions or trouble? Get in touch.  
-
-[**Twitter**](https://twitter.com/sadkellz)  
-**Discord:** `KELLZ#0001`
+## Contact and Support
+Any questions or trouble? Join the discord
+### [Discord](https://discord.gg/2XrMjFq7zT)
 
 ## License
 This project is licensed under the GPL 3.0 License - see the [LICENSE.md](https://github.com/sadkellz/External-Melee-Camera/blob/main/LICENSE.md) file for details
