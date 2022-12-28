@@ -1,9 +1,9 @@
 import bpy
 import math
 import struct
-import pymem
-from .emc_common import pm, get_ptr, GALE01, SAVE_STATE, \
-    LOAD_STATE, SCREEN_SHOT, FRAME_STEP, CAM_TYPE
+from .emc_common import pm, GALE01, SAVE_STATE, \
+    LOAD_STATE, SCREEN_SHOT, FRAME_STEP, CAM_TYPE, \
+    PLAYER_ONE, PLAYER_TWO, PLAYER_THREE, PLAYER_FOUR
 
 
 # Injects a python interpreter, so we can call functions from Dolphins main thread via offset
@@ -23,6 +23,26 @@ def check_cam_type():
     if current_type != int(8):
         pm.write_int(GALE01 + CAM_TYPE, 8)
 
+def set_player_pos():
+    P1 = bpy.data.objects['PLAYER_1']
+    P2 = bpy.data.objects['PLAYER_2']
+    P3 = bpy.data.objects['PLAYER_3']
+    P4 = bpy.data.objects['PLAYER_4']
+
+    p1_loc = P1.matrix_world.translation
+    p2_loc = P2.matrix_world.translation
+    p3_loc = P3.matrix_world.translation
+    p4_loc = P4.matrix_world.translation
+
+    P1_BYTES = pm.read_bytes(GALE01 + PLAYER_ONE, 12)
+    P2_BYTES = pm.read_bytes(GALE01 + PLAYER_TWO, 12)
+    P3_BYTES = pm.read_bytes(GALE01 + PLAYER_THREE, 12)
+    P4_BYTES = pm.read_bytes(GALE01 + PLAYER_FOUR, 12)
+
+    p1_loc.xzy = struct.unpack(">fff", P1_BYTES)
+    p2_loc.xzy = struct.unpack(">fff", P2_BYTES)
+    p3_loc.xzy = struct.unpack(">fff", P3_BYTES)
+    p4_loc.xzy = struct.unpack(">fff", P4_BYTES)
 
 def sync_blender_cam(addr):
     # Define Camera and Origin

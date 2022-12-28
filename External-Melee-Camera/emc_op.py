@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from .emc_common import GALE01, CAM_START, PAUSE_BIT, CAM_TYPE
 from .emc_functions import sync_blender_cam, sync_player_control,\
-    take_screenshot, frame_step, load_state, save_state
+    take_screenshot, frame_step, load_state, save_state, set_player_pos
 
 
 class syncCamera(bpy.types.Operator):
@@ -20,8 +20,13 @@ class syncCamera(bpy.types.Operator):
 
         if event.type == 'TIMER':
             sync_blender_cam((GALE01 + CAM_START))
+
+            if context.scene.my_tool.is_sync_player:
+                set_player_pos()
+
             if context.scene.my_tool.is_media_sync:
                 sync_player_control((GALE01 + PAUSE_BIT))
+
         return {'PASS_THROUGH'}
 
     def execute(self, context):
@@ -43,7 +48,6 @@ def wait_for_screenshot(root_dir):
         if size == size2:
             time.sleep(0.1)
             break
-
 
 
 def img_seq(context, root_dir):

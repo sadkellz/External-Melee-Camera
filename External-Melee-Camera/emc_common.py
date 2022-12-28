@@ -26,6 +26,10 @@ FRAME_STEP_PAT = b'..\x5C\x24\x08\x57\x48\x83\xEC\x20\x48\x8B\xF9\xE8....\x83\xF
 CAM_START = 0x453040
 PAUSE_BIT = 0x479D68
 CAM_TYPE = 0x452C6F
+PLAYER_ONE = 0x453090
+PLAYER_TWO = 0x453F20
+PLAYER_THREE = 0x454DB0
+PLAYER_FOUR = 0x455C40
 
 
 # Finds the specific page with the size of EMU_SIZE.
@@ -70,9 +74,9 @@ def find_dolphin_funcs(byte_pattern):
     found = pymem.pattern.pattern_scan_module(handle, module, byte_pattern, return_multiple=False)
     return found
 
-
 SAVE_STATE = find_dolphin_funcs(SAVE_STATE_PAT) - pm.base_address
 LOAD_STATE = find_dolphin_funcs(LOAD_STATE_PAT) - pm.base_address
 SCREEN_SHOT = find_dolphin_funcs(SCREEN_SHOT_PAT) - pm.base_address
 FRAME_STEP = find_dolphin_funcs(FRAME_STEP_PAT) - pm.base_address
 GALE01 = find_gale01()
+

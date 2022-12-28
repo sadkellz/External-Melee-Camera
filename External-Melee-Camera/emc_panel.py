@@ -11,6 +11,12 @@ class controlProperties(PropertyGroup):
         default=False
         )
 
+    is_sync_player: BoolProperty(
+        name="Sync Player Positions",
+        description="",
+        default=False
+        )
+
     slippi_path: StringProperty(
         name="Screenshot Directory",
         description=" 'C:\\Users\\*yourname*\\AppData\\Roaming\\Slippi Launcher\\playback\\User\\ScreenShots' ",
@@ -36,13 +42,14 @@ class emcControlPanel(Panel):
         layout = self.layout
         mytool = context.scene.my_tool
         layout.operator("wm.sync_cam")
+        layout.prop(mytool, "is_sync_player")
+        layout.prop(mytool, "is_media_sync")
         layout.separator()
         layout.operator('wm.save_state')
         layout.operator('wm.load_state')
         layout.separator()
         layout.operator("wm.ss_seq")
         layout.operator("wm.prev_seq")
-        layout.prop(mytool, "is_media_sync")
         layout.separator()
         layout.prop(mytool, "slippi_path")
         layout.separator()
