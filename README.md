@@ -7,7 +7,7 @@
 <h1 align="center">External Melee Camera</h1>
 </div>
 
-## Description
+# Description
 **EMC** is a Blender add-on that enables you to control various functions
 in Super Smash Bros. Melee and Dolphin directly from Blender. 
 
@@ -21,14 +21,19 @@ and effort and I would appreciate the tips!
 ## Getting Started
 >### Requirements
 > * Windows 10
+> * [Python 3.10.8](https://www.python.org/downloads/release/python-3108/)
 > * [Pymem](https://pymem.readthedocs.io/en/latest/)
-> * [Blender 2.9.3 LTS Portable](https://www.blender.org/download/lts/2-93/) - Later versions have breaking Python changes.
+> * [Blender 3.3 LTS Portable](https://www.blender.org/download/lts/3-3/)
 > * [Slippi Launcher 2.7+](https://slippi.gg/)
 
-## Installing the Add-on
+## Installing Requirements
 Download the latest version of **EMC** from the 
-[release](https://github.com/sadkellz/External-Melee-Camera/releases)
-page and download the latest version.
+[releases](https://github.com/sadkellz/External-Melee-Camera/releases)
+page.
+
+>### Python
+> Download the Python installer for Windows, check the two boxes and click _'Install Now'._
+>![](imgs/Python_Installer.png)
 
 >### Pymem
 >To install **Pymem**, run Blender as **administrator** and navigate to the scripting menu.
@@ -57,14 +62,13 @@ page and download the latest version.
 >![](imgs/Install_Addon_2.png)
 
 ## Scene Setup
-> ### Blender File
 > To get started, open the provided [emc_stages.blend](resources/emc_stages.blend) file. This Blender scene contains all the legal stages
 > in their own collections, to be used as reference when creating a camera animation.
 > 
 > ### Control Panel
-> The control panel is located in the 3D View sidebar.  
-> ![](imgs/Panel_Location.png)
-> #### _NOTE: Dolphin must be running for the panel to appear!_
+> The control panel is located in the 3D View sidebar or can be accessed by the hotkey _'N'_.  
+>  _**NOTE: Dolphin must be running for the panel to appear!**_  
+> 
 > ![](imgs/Panel.png)
 > 
 > ### Descriptions
@@ -72,10 +76,10 @@ page and download the latest version.
 > > This feature allows you to control the camera in Super Smash Bros. Melee using Blender.  
 > > Press _**'Q'**_ to disable camera control.
 > 
-> > ##### Save State
+> > ##### Quick Save
 > > This creates a Dolphin save state. Will overwrite the oldest state.
 > 
-> > ##### Load State
+> > ##### Quick Load
 > > Loads the last saved state.
 > 
 > > ##### Image Sequence
@@ -94,16 +98,20 @@ page and download the latest version.
 > > `C:\Users\*your name*\AppData\Roaming\Slippi Launcher\playback\User\ScreenShots`
 
 ## Known Issues
+### Could not read/write memory at: x, length: x - GetLastError: 5 or 299
++ Make sure Python is installed on your system, and is added to PATH.
++ Make sure that the Python you installed is the same version that comes packaged with Blender.
+
 ### ModuleNotFoundError: No module named 'pymem'
 This error occurs if Pymem was not properly installed, or wasn't able to.
-+ Try running Blender as administrator, then retry installing Pymem.
-+ Download a portable version of Blender 2.9.3, then retry installing Pymem.  
-[Direct Download](https://www.blender.org/download/release/Blender2.93/blender-2.93.13-windows-x64.zip)
++ Try running Blender as administrator, then try installing Pymem again.
++ Download a portable version of Blender 3.3.2, then try installing Pymem again.
+[Direct Download](https://www.blender.org/download/release/Blender3.3/blender-3.3.2-windows-x64.zip)
 
 ### MemoryReadError: Could not read memory at: x, length: x
 This error occurs if Dolphin was closed and re-opened.
 + Try restarting Blender. Remember to save your work!
-+ Make sure that Dolphin is currently in game, or is playing a replay.
++ Make sure that Dolphin is currently emulating, or is playing a replay.
 + Try running Blender as administrator.
 
 ### ProcessNotFound: Could not find process: Slippi Dolphin.exe
@@ -113,6 +121,7 @@ This error occurs if Dolphin is not currently running, or is named something oth
 
 ### Dolphin is crashing when trying to use certain functions
 + Check if your Slippi Launcher is updated to the latest version.
++ Double-check the Python version in Blender and download that version of Python directly.
 + Try running Blender as administrator.
 + Try uninstalling Slippi and remove user files, then reinstall.
 
