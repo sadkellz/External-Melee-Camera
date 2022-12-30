@@ -1,11 +1,11 @@
 import bpy
-from .emc_panel import classes, PointerProperty, controlProperties
+from .emc_panel import classes, PointerProperty, control_properties
 from bpy.utils import register_class, unregister_class
 
 bl_info = {
     "name": "External-Melee-Camera",
     "author": "KELLZ",
-    "version": (1, 8, 2),
+    "version": (1, 9, 2),
     "blender": (3, 3, 2),
     "warning": "Requires installation of dependencies",
     "category": "Tools",
@@ -17,7 +17,7 @@ bl_info = {
 def register():
     for cls in classes:
         register_class(cls)
-    bpy.types.Scene.my_tool = PointerProperty(type=controlProperties)
+    bpy.types.Scene.my_tool = PointerProperty(type=control_properties)
 
 
 def unregister():
