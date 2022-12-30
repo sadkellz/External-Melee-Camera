@@ -23,6 +23,8 @@ SAVE_STATE_PAT = b'...\x5C\x24\x10\x55\x48\x8B\xEC\x48\x83\xEC\x50\x48\x8D\x4D\x
 LOAD_STATE_PAT = b'...\x5C\x24\x08\x57\x48\x83\xEC\x70\x48\x8B\x05....\x48\x33\xC4\x48\x89\x44.\x60\x8B\xD9\x48\x8D\x4C.\x30\xE8....'
 SCREEN_SHOT_PAT = b'\x40\x53\x48\x83\xEC\x50\x48\x8B\x05....\x48\x33\xC4\x48\x89\x44.\x40\x48\x8B\x05....'
 FRAME_STEP_PAT = b'..\x5C\x24\x08\x57\x48\x83\xEC\x20\x48\x8B\xF9\xE8....\x83\xF8\x01\x0F\x94\xC3\xE8....\xE8....'
+SAVE_STATE_SLOT_PAT = b'\x48\x89...\x48\x89...\x57\x48\x83\xEC\x60\x48\x8B..\x98\xB3\x00'
+LOAD_STATE_SLOT_PAT = b'..\x5C\x24\x10\x57\x48\x83\xEC\x60\x48\x8B\x05\x47\xAF\xB3\x00'
 # FREE_LOOK = None
 CAM_START = 0x453040
 PAUSE_BIT = 0x479D68
@@ -79,5 +81,7 @@ SAVE_STATE = find_dolphin_funcs(SAVE_STATE_PAT) - pm.base_address
 LOAD_STATE = find_dolphin_funcs(LOAD_STATE_PAT) - pm.base_address
 SCREEN_SHOT = find_dolphin_funcs(SCREEN_SHOT_PAT) - pm.base_address
 FRAME_STEP = find_dolphin_funcs(FRAME_STEP_PAT) - pm.base_address
+SAVE_STATE_SLOT = find_dolphin_funcs(SAVE_STATE_SLOT_PAT) - pm.base_address
+LOAD_STATE_SLOT = find_dolphin_funcs(LOAD_STATE_SLOT_PAT) - pm.base_address
 GALE01 = find_gale01()
 
