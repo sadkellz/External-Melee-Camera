@@ -3,6 +3,7 @@ import pymem
 from pymem.ptypes import RemotePointer
 
 pm = pymem.Pymem("Slippi Dolphin.exe")
+'''
 INDEX_PTR = 0x01CF0088
 
 
@@ -13,9 +14,9 @@ def get_ptr(base, offsets):
             remote_pointer = RemotePointer(pm.process_handle, remote_pointer.value + offset)
         else:
             return remote_pointer.value + offset
+'''
 
-
-FRAME_INDEX = get_ptr(pm.base_address + INDEX_PTR, [0xC])
+#FRAME_INDEX = get_ptr(pm.base_address + INDEX_PTR, [0xC])
 EMU_SIZE = 0x2000000
 EMU_DIST = 0x10000
 SAVE_STATE_PAT = b'...\x5C\x24\x10\x55\x48\x8B\xEC\x48\x83\xEC\x50\x48\x8D\x4D\xE0'
