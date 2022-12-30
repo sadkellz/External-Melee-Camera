@@ -5,8 +5,8 @@ from bpy.utils import register_class, unregister_class
 bl_info = {
     "name": "External-Melee-Camera",
     "author": "KELLZ",
-    "version": (1, 7, 1),
-    "blender": (2, 93, 0),
+    "version": (1, 8, 2),
+    "blender": (3, 3, 2),
     "warning": "Requires installation of dependencies",
     "category": "Tools",
     "description": "Control Melee's Camera from Blender.",
