@@ -3,7 +3,8 @@ import math
 import struct
 from .emc_common import pm, GALE01, SAVE_STATE, \
     LOAD_STATE, SCREEN_SHOT, FRAME_STEP, CAM_TYPE, \
-    PLAYER_ONE, PLAYER_TWO, PLAYER_THREE, PLAYER_FOUR
+    PLAYER_ONE, PLAYER_TWO, PLAYER_THREE, PLAYER_FOUR,\
+    LOAD_STATE_SLOT, SAVE_STATE_SLOT
 
 
 # Injects a python interpreter, so we can call functions from Dolphins main thread via offset
@@ -151,3 +152,19 @@ def frame_step():
     fnc_type = 'ctypes.c_int'
     fnc_args = ''
     call_native_func(FRAME_STEP, fnc_type, fnc_args)
+
+
+def save_slot_state(slot):
+    fnc_type = 'None, ctypes.c_int, ctypes.c_bool'
+    fnc_args = '{}, False'.format(slot)
+    # Go to frame start.
+    bpy.ops.screen.frame_jump(end=False)
+    call_native_func(SAVE_STATE_SLOT, fnc_type, fnc_args)
+
+
+def load_slot_state(slot):
+    fnc_type = 'None, ctypes.c_int, ctypes.c_bool'
+    fnc_args = '{}, False'.format(slot)
+    # Go to frame start.
+    bpy.ops.screen.frame_jump(end=False)
+    call_native_func(LOAD_STATE_SLOT, fnc_type, fnc_args)
