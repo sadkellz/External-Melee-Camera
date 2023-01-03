@@ -173,5 +173,7 @@ def load_slot_state(slot):
 def get_current_frame():
     frame_bytes = pm.read_bytes(CURRENT_FRAME, 4)
     frame = struct.unpack('>i', frame_bytes)
+    # struct.unpack returns a tuple.
+    # game start is -124, but the global timer will start at 1 for all scenes.
     frame = (frame[0] - 124)
     return frame
