@@ -1,11 +1,12 @@
 import bpy
 import time
+import struct
 import os
 from pathlib import Path
-from .emc_common import GALE01, CAM_START, PAUSE_BIT, CAM_TYPE
+from .emc_common import GALE01, CAM_START, PAUSE_BIT, CURRENT_FRAME
 from .emc_functions import sync_blender_cam, sync_player_control,\
     take_screenshot, frame_step, load_state, save_state, set_player_pos, \
-    save_slot_state, load_slot_state
+    save_slot_state, load_slot_state, get_current_frame
 
 
 class menu_sync_camera(bpy.types.Operator):
@@ -21,7 +22,8 @@ class menu_sync_camera(bpy.types.Operator):
 
         if event.type == 'TIMER':
             sync_blender_cam((GALE01 + CAM_START))
-
+            frame = get_current_frame()
+            context.scene.my_tool.frame_number = frame
             if context.scene.my_tool.is_sync_player:
                 set_player_pos()
 
@@ -287,6 +289,28 @@ class menu_img_preview(bpy.types.Operator):
         load_state()
         time.sleep(0.5)
         scene.frame_set(scene.frame_start)
+        return {'RUNNING_MODAL'}
+
+    def cancel(self, context):
+        wm = context.window_manager
+        wm.event_timer_remove(self._timer)
+
+class menu_current_frame(bpy.types.Operator):
+    bl_idname = "wm.frame"
+    bl_label = "Current Frame"
+    is_running = False
+    _timer = None
+
+    def modal(self, context, event):
+        if event.type == 'TIMER':
+            frame = get_current_frame()
+            context.scene.my_tool.frame_number = frame
+        return {'PASS_THROUGH'}
+
+    def execute(self, context):
+        wm = context.window_manager
+        self._timer = wm.event_timer_add(0.1, window=context.window)
+        wm.modal_handler_add(self)
         return {'RUNNING_MODAL'}
 
     def cancel(self, context):
