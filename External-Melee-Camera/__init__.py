@@ -5,7 +5,7 @@ from bpy.utils import register_class, unregister_class
 bl_info = {
     "name": "External-Melee-Camera",
     "author": "KELLZ",
-    "version": (1, 9, 2),
+    "version": (1, 10, 2),
     "blender": (3, 3, 2),
     "warning": "Requires installation of dependencies",
     "category": "Tools",
@@ -24,7 +24,6 @@ def unregister():
     for cls in reversed(classes):
         unregister_class(cls)
     del bpy.types.Scene.my_tool
-
 
 if __name__ == "__main__":
     register()
