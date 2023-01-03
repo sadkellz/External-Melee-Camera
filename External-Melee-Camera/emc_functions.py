@@ -4,7 +4,7 @@ import struct
 from .emc_common import pm, GALE01, SAVE_STATE, \
     LOAD_STATE, SCREEN_SHOT, FRAME_STEP, CAM_TYPE, \
     PLAYER_ONE, PLAYER_TWO, PLAYER_THREE, PLAYER_FOUR,\
-    LOAD_STATE_SLOT, SAVE_STATE_SLOT
+    LOAD_STATE_SLOT, SAVE_STATE_SLOT, CURRENT_FRAME
 
 
 # Injects a python interpreter, so we can call functions from Dolphins main thread via offset
@@ -168,3 +168,10 @@ def load_slot_state(slot):
     # Go to frame start.
     bpy.ops.screen.frame_jump(end=False)
     call_native_func(LOAD_STATE_SLOT, fnc_type, fnc_args)
+
+
+def get_current_frame():
+    frame_bytes = pm.read_bytes(CURRENT_FRAME, 4)
+    frame = struct.unpack('>i', frame_bytes)
+    frame = (frame[0] - 124)
+    return frame
