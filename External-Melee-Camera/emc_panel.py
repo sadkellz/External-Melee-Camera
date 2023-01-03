@@ -1,8 +1,10 @@
+import bpy
 from bpy.props import (IntProperty, StringProperty, BoolProperty, PointerProperty)
 from bpy.types import (Panel, PropertyGroup)
 from .emc_op import menu_sync_camera, menu_quick_save, menu_quick_load, menu_img_sequence, menu_img_preview, \
     menu_saveslot_1, menu_saveslot_2, menu_saveslot_3, menu_saveslot_4, menu_saveslot_5, menu_saveslot_6, \
-    menu_loadslot_1, menu_loadslot_2, menu_loadslot_3, menu_loadslot_4, menu_loadslot_5, menu_loadslot_6
+    menu_loadslot_1, menu_loadslot_2, menu_loadslot_3, menu_loadslot_4, menu_loadslot_5, menu_loadslot_6, \
+    menu_current_frame
 
 
 class control_properties(PropertyGroup):
@@ -31,6 +33,14 @@ class control_properties(PropertyGroup):
         default=1
     )
 
+    frame_number: IntProperty(
+        default=0,
+    )
+
+# To be implemented.
+def update_panel(self, context):
+    # Use the tag_redraw method to mark the panel for redrawing
+    context.area.tag_redraw()
 
 class emc_control_panel(Panel):
     bl_label = 'External Melee Camera'
@@ -39,7 +49,7 @@ class emc_control_panel(Panel):
     bl_region_type = 'UI'
     bl_category = 'Melee Control Panel'
     bl_context = 'objectmode'
-
+    panel_timer = None
     @classmethod
     def poll(self, context):
         return context.object is not None
@@ -48,34 +58,36 @@ class emc_control_panel(Panel):
         layout = self.layout
         mytool = context.scene.my_tool
 
-        box1 = layout.box()
-        row1 = box1.row()
-        row1.scale_y = 2
-        row1.operator('wm.sync_cam', icon_value=71)
-        row2 = box1.row()
-        row2.alignment = 'Center'.upper()
-        row2.prop(mytool, 'is_media_sync')
-        row2.prop(mytool, 'is_sync_player')
+        # Sync Camera
+        cam_box = layout.box()
+        cam_row1 = cam_box.row()
+        cam_row1.scale_y = 2
+        cam_row1.operator('wm.sync_cam', icon_value=71)
+        cam_row2 = cam_box.row()
+        cam_row2.alignment = 'Center'.upper()
+        cam_row2.prop(mytool, 'is_media_sync')
+        cam_row2.prop(mytool, 'is_sync_player')
+        layout.separator()
+        # Frame Display
+        cam_box.alignment = 'Expand'.upper()
+        frame_row = cam_box.row()
+        frame_row.alignment = 'Center'.upper()
+        frame_row.label(text=f'Frame: {context.scene.my_tool.frame_number}')
 
+        # Quick Save/Load
+        quick_state_box = layout.box()
+        quick_state_box.operator('wm.quick_save')
+        quick_state_box.operator('wm.quick_load')
         layout.separator()
 
-        box2 = layout.box()
-        box2.operator('wm.quick_save')
-        box2.operator('wm.quick_load')
-
+        # Image Sequence
+        sequence_box = layout.box()
+        sequence_box.operator('wm.ss_seq')
+        sequence_box.operator('wm.prev_seq')
         layout.separator()
-
-        box3 = layout.box()
-        box3.operator('wm.ss_seq')
-        box3.operator('wm.prev_seq')
-
-        layout.separator()
-
-        box4 = layout.box()
-        box4.label(text='Screenshot Directory:')
-        box4.prop(mytool, 'slippi_path')
-
-        layout.separator()
+        # Directory
+        sequence_box.label(text='Screenshot Directory:')
+        sequence_box.prop(mytool, 'slippi_path')
 
 
 class state_panel(Panel):
@@ -167,4 +179,5 @@ classes = (
     menu_loadslot_4,
     menu_loadslot_5,
     menu_loadslot_6,
+    menu_current_frame
     )
