@@ -1,4 +1,6 @@
 import bpy
+import pymem
+from .emc_common import pattern_scan_all, set_global_vars
 from bpy.props import (IntProperty, StringProperty, BoolProperty, PointerProperty)
 from bpy.types import (Panel, PropertyGroup)
 from .emc_op import menu_sync_camera, menu_quick_save, menu_quick_load, menu_img_sequence, menu_img_preview, \
@@ -37,10 +39,28 @@ class control_properties(PropertyGroup):
         default=0,
     )
 
-# To be implemented.
-def update_panel(self, context):
-    # Use the tag_redraw method to mark the panel for redrawing
-    context.area.tag_redraw()
+
+GALE01 = None
+pm = None
+is_on = False
+
+
+def check_exists():
+    try:
+        pymem.Pymem("Slippi Dolphin.exe")
+        return True
+    except pymem.exception.ProcessNotFound:
+        return False
+
+
+# Finds 'GALE01' in memory.
+# This is used to jump to specific functions in Melee ie: GALE01 + CAM_START
+def find_gale01(dol):
+    handle = dol.process_handle
+    byte_pattern = bytes.fromhex("47 41 4C 45 30 31 00 02")
+    found = pattern_scan_all(handle, byte_pattern)
+    return found
+
 
 class emc_control_panel(Panel):
     bl_label = 'External Melee Camera'
@@ -50,16 +70,37 @@ class emc_control_panel(Panel):
     bl_category = 'Melee Control Panel'
     bl_context = 'objectmode'
     panel_timer = None
-    @classmethod
-    def poll(self, context):
-        return context.object is not None
 
     def draw(self, context):
+        global is_on
+        global pm
+        global GALE01
         layout = self.layout
         mytool = context.scene.my_tool
+        exist = check_exists()
+        # Grey out the add-on functions if Dolphin isn't open
+        if not exist:
+            row = layout.row()
+            row.scale_y = 2.0
+            row.label(text="Slippi Dolphin is not running!", icon='ERROR')
+            is_on = False
+            GALE01 = None
+
+        elif exist and GALE01 is None:
+            row = layout.row()
+            row.scale_y = 2.0
+            row.label(text="Waiting for Melee!", icon='ERROR')
+            is_on = False
+            pm = pymem.Pymem("Slippi Dolphin.exe")
+            GALE01 = find_gale01(pm)
+            set_global_vars(pm)
+
+        elif GALE01 is not None:
+            is_on = True
 
         # Sync Camera
         cam_box = layout.box()
+        cam_box.enabled = is_on
         cam_row1 = cam_box.row()
         cam_row1.scale_y = 2
         cam_row1.operator('wm.sync_cam', icon_value=71)
@@ -68,6 +109,7 @@ class emc_control_panel(Panel):
         cam_row2.prop(mytool, 'is_media_sync')
         cam_row2.prop(mytool, 'is_sync_player')
         layout.separator()
+
         # Frame Display
         cam_box.alignment = 'Expand'.upper()
         frame_row = cam_box.row()
@@ -76,15 +118,18 @@ class emc_control_panel(Panel):
 
         # Quick Save/Load
         quick_state_box = layout.box()
+        quick_state_box.enabled = is_on
         quick_state_box.operator('wm.quick_save')
         quick_state_box.operator('wm.quick_load')
         layout.separator()
 
         # Image Sequence
         sequence_box = layout.box()
+        sequence_box.enabled = is_on
         sequence_box.operator('wm.ss_seq')
         sequence_box.operator('wm.prev_seq')
         layout.separator()
+
         # Directory
         sequence_box.label(text='Screenshot Directory:')
         sequence_box.prop(mytool, 'slippi_path')
@@ -108,6 +153,12 @@ class state_panel(Panel):
 
     def draw(self, context):
         layout = self.layout
+        exist = check_exists()
+        # Grey out the add-on functions if Dolphin isn't open
+        if not exist:
+            layout.enabled = False
+        else:
+            layout.enabled = True
         state_split = layout.split(factor=0.5, align=False)
         state_split.alignment = 'Center'.upper()
 
@@ -157,6 +208,7 @@ class state_panel(Panel):
         state_row4.operator("wm.load_slot_6", text="6")
 
         state_col2.separator(factor=0.75)
+
 
 classes = (
     control_properties,
