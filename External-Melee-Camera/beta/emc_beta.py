@@ -123,7 +123,7 @@ def pattern_scan_all(handle, pattern, *, return_multiple=False):
 # Subtracting base address as 'call_native_func()' will add it. Trying to stick to the format of using base + offset.
 def find_dolphin_funcs(dol, byte_pattern):
     handle = dol.process_handle
-    module = pymem.process.module_from_name(dol.process_handle, "Dolphin.exe")
+    module = pymem.process.module_from_name(dol.process_handle, "Slippi Dolphin.exe")
     found = (pymem.pattern.pattern_scan_module(handle, module, byte_pattern, return_multiple=False) - dol.base_address)
     return found
 
@@ -158,7 +158,7 @@ def set_global_vars(dol):
 
 
 def set_pm():
-    pm = pymem.Pymem("Dolphin.exe")
+    pm = pymem.Pymem("Slippi Dolphin.exe")
     handle = pm.process_handle
     byte_pattern = bytes.fromhex("47 41 4C 45 30 31 00 02")
     GALE01 = pattern_scan_all(handle, byte_pattern)
@@ -375,7 +375,7 @@ def get_directory_size(directory):
 
 
 def get_slippi_path():
-    cmd = 'wmic process where "name=\'Dolphin.exe\'" get ExecutablePath'
+    cmd = 'wmic process where "name=\'Slippi Dolphin.exe\'" get ExecutablePath'
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     output_bytes = proc.stdout.read()  # Read the output as bytes
     output_str = output_bytes.decode('utf-8')  # Decode bytes to string
@@ -384,7 +384,7 @@ def get_slippi_path():
     path_start = output_str.find('C:\\')
     path_end = output_str.find('.exe') + 4  # Include the .exe extension
     path = output_str[path_start:path_end]
-    path = path.replace('Dolphin.exe', 'User\\ScreenShots')
+    path = path.replace('Slippi Dolphin.exe', 'User\\ScreenShots')
     return path
 
 
@@ -1037,7 +1037,7 @@ is_on = False
 
 def check_exists():
     try:
-        pymem.Pymem("Dolphin.exe")
+        pymem.Pymem("Slippi Dolphin.exe")
         return True
     except pymem.exception.ProcessNotFound:
         return False
@@ -1082,7 +1082,7 @@ class emc_control_panel(Panel):
             row.scale_y = 2.0
             row.label(text="Waiting for Melee!", icon='ERROR')
             is_on = False
-            pm = pymem.Pymem("Dolphin.exe")
+            pm = pymem.Pymem("Slippi Dolphin.exe")
             GALE01 = find_gale01(pm)
             set_global_vars(pm)
 
