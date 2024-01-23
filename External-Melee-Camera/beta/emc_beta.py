@@ -14,7 +14,7 @@ from pymem.ptypes import RemotePointer
 bl_info = {
     "name": "External-Melee-Camera",
     "author": "KELLZ",
-    "version": (2, 0, 0),
+    "version": (2, 0, 1),
     "blender": (3, 3, 2),
     "warning": "Requires installation of dependencies",
     "category": "Tools",
@@ -407,10 +407,12 @@ def write_player_data(port, flag, byte):
     # Omit the first byte by slicing the bytes string
 
     # Read pointer for where entity data is
+    print((port))
     port = port + 0xB0
     ent_data_ptr = pm.read_bytes(GALE01 + port, 4)[1:]
     ent_data_ptr = int.from_bytes(ent_data_ptr, 'big')
     ent_data_start = GALE01 + ent_data_ptr
+    
     byte = struct.pack(">b", byte)
     pm.write_bytes(ent_data_start + flag, byte, len(byte))
 
@@ -767,6 +769,7 @@ class control_properties(PropertyGroup):
     def toggl_colour(self, context):
         addr = GALE01 + BG_COLOUR
         colour_vector = self.sna_colour
+        colour_vector = [max(0.0, min(1.0, value)) for value in colour_vector]
         hex_colour = [int(value * 255) for value in colour_vector]
         colour_hex_list = [hex(value)[2:].zfill(2) for value in hex_colour]
         buf = struct.pack(">BBB", *hex_colour)
@@ -864,6 +867,7 @@ class control_properties(PropertyGroup):
 
     def player_4_update(self, context):
         selected_enum_value = self.sna_player_4
+        print("p4")
 
         if selected_enum_value == "VISIBLE":
             # Handle the Visible case
@@ -999,10 +1003,10 @@ class control_properties(PropertyGroup):
     sna_player_3: EnumProperty(
         name='Player 3',
         items=[
-            ('Visible', 'Visible', '', 0, 0),
-            ('Hidden', 'Hidden', '', 0, 1),
-            ('Collision', 'Collision', '', 0, 2),
-            ('Collision Overlay', 'Collision Overlay', '', 0, 3),
+            ('VISIBLE', 'Visible', '', 0, 0),
+            ('HIDDEN', 'Hidden', '', 0, 1),
+            ('COLLISION', 'Collision', '', 0, 2),
+            ('OVERLAY', 'Collision Overlay', '', 0, 3),
         ],
         description="",
         default=None,
@@ -1012,10 +1016,10 @@ class control_properties(PropertyGroup):
     sna_player_4: EnumProperty(
         name='Player 4',
         items=[
-            ('Visible', 'Visible', '', 0, 0),
-            ('Hidden', 'Hidden', '', 0, 1),
-            ('Collision', 'Collision', '', 0, 2),
-            ('Collision Overlay', 'Collision Overlay', '', 0, 3),
+            ('VISIBLE', 'Visible', '', 0, 0),
+            ('HIDDEN', 'Hidden', '', 0, 1),
+            ('COLLISION', 'Collision', '', 0, 2),
+            ('OVERLAY', 'Collision Overlay', '', 0, 3),
         ],
         description="",
         default=None,
