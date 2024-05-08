@@ -8,7 +8,7 @@
 </div>
 
 # Description
-**EMC** is a Blender add-on that enables you to control various functions
+**EMC** is a Blender script that enables you to control various functions
 in Super Smash Bros. Melee and Dolphin directly from Blender. 
 
 It mainly focuses on camera controls, but it also allows you to
