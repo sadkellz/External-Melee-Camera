@@ -39,7 +39,7 @@ page.
 >![](imgs/Python_Installer.png)
 
 >## Blender
-> To get started, open the provided [emc_stages.blend](resources/emc_stages.blend) file. This Blender scene contains all the legal stages
+> To get started, open `emc_stages.blend` file. This Blender scene contains all the legal stages
 > in their own collections, to be used as reference when creating a camera animation.
 > 
 >### Pymem
