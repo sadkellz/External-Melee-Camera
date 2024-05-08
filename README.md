@@ -26,8 +26,8 @@ and effort and I would appreciate the tips!
 > * [Blender 3.3 LTS Portable](https://www.blender.org/download/lts/3-3/)
 > * [Slippi Launcher 2.7+](https://slippi.gg/)
 
-[!NOTE]
-It is important to install the version of Python that comes packaged with Blender.
+> [!CAUTION]
+> It is important to install the version of Python that comes packaged with Blender.
 
 ## Installing Requirements
 Download the latest version of **EMC** from the 
